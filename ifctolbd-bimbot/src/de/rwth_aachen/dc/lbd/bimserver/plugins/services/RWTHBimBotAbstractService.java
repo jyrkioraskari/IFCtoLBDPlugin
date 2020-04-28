@@ -63,11 +63,13 @@ public abstract class RWTHBimBotAbstractService extends AbstractService implemen
 				bimServerClientInterface.download(roid, serializerByContentType.getOid(), outputStream);
 				data = outputStream.toByteArray();
 			}
+			
+			//TODO cannot be only one IFC versio!!
 			BimBotsInput input = new BimBotsInput(SchemaName.IFC_STEP_2X3TC1, data);
 			SProject project = bimServerClientInterface.getServiceInterface().getProjectByPoid(poid);
 			String contextId = project.getUuid().toString();
-			IfcModelInterface model = bimServerClientInterface.getModel(project, roid, preloadCompleteModel(), false, requiresGeometry());
-			input.setIfcModel(model);
+			//IfcModelInterface model = bimServerClientInterface.getModel(project, roid, preloadCompleteModel(), false, requiresGeometry());
+			//input.setIfcModel(model);
 			BimBotContext bimBotContext = new BimBotContext() {
 				@Override
 				public void updateProgress(String label, int percentage) {
@@ -84,6 +86,7 @@ public abstract class RWTHBimBotAbstractService extends AbstractService implemen
 					return contextId;
 				}
 			};
+			// Here the call to the BOT application code 
 			BimBotsOutput output = runBimBot(input, bimBotContext, new PluginConfiguration(settings));
 			long end = System.nanoTime();
 			
@@ -160,7 +163,7 @@ public abstract class RWTHBimBotAbstractService extends AbstractService implemen
 
 	@Override
 	public boolean needsRawInput() {
-		return false;
+		return true;
 	}
 
 	public abstract String getOutputSchema();
