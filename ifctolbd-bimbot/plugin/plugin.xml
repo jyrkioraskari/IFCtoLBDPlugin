@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PluginDescriptor>
+	<JavaPlugin>
+		<interfaceClass>org.bimserver.plugins.services.ServicePlugin</interfaceClass>
+		<implementationClass>de.rwth_aachen.dc.lbd.LinkedBuildingDataBIMBotService</implementationClass>
+		<description>Linked Building Data Service</description>
+		<name>LinkedBuildingDataBIMBotService</name>
+	</JavaPlugin>
+</PluginDescriptor>
