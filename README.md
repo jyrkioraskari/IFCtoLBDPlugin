@@ -1,2 +1,2 @@
-# IFCtoLBD  BimBot service for BIMserver
+# IFCtoLBD  BimBot service plugin for BIMserver
 
