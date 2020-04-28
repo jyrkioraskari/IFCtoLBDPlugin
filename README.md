@@ -1,2 +1,2 @@
-# IFCtoLBD BOT plugin for BIMserver
-IFCtoLBD BOT for the open source BIMserver
+# IFCtoLBD  BimBot service for BIMserver
+
