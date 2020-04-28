@@ -20,6 +20,10 @@
 	</licenses>
 	<developers>
 		<developer>
+			<name>Jyrki Oraskari</name>
+			<email>Jyrki.Oraskari@dc.rwth-aachen.de</email>
+		</developer>
+		<developer>
 			<name>Ruben de Laat</name>
 			<email>ruben@logic-labs.nl</email>
 		</developer>
@@ -57,7 +61,7 @@
 			<artifactId>shared</artifactId>
 			<version>1.5.182</version>
 		</dependency>
-		
+
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
