@@ -9,6 +9,9 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.bimserver.bimbotclient.beans.Application;
+import org.bimserver.bimbotclient.beans.Service;
+import org.bimserver.bimbotclient.exeptions.BimBotServiceException;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,15 +20,15 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Charsets;
 
-public class BimBotServer {
-	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(BimBotServer.class);
+public class BimBotServerConnection {
+	private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(BimBotServerConnection.class);
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	private String serviceListPath;
 	private BimBotClient bimBotClient;
 	private String name;
 	private String description;
 
-	public BimBotServer(BimBotClient bimBotClient, String name, String description, String serviceListPath) {
+	public BimBotServerConnection(BimBotClient bimBotClient, String name, String description, String serviceListPath) {
 		this.bimBotClient = bimBotClient;
 		this.name = name;
 		this.description = description;

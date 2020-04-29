@@ -1,10 +1,11 @@
-package org.bimserver.bimbotclient;
+package org.bimserver.bimbotclient.beans;
 
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.http.client.utils.URIBuilder;
+import org.bimserver.bimbotclient.BimBotClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;

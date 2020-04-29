@@ -1,4 +1,4 @@
-package org.bimserver.bimbotclient;
+package org.bimserver.bimbotclient.exeptions;
 
 public class BimBotServiceException extends Exception {
 

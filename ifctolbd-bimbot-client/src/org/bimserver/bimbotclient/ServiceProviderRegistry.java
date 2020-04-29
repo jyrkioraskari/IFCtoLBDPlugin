@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.bimserver.bimbotclient.exeptions.BimBotServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +28,8 @@ public class ServiceProviderRegistry {
 		this.url = url;
 	}
 	
-	public List<BimBotServer> listServiceProviders() throws BimBotServiceException {
-		List<BimBotServer> serviceProviders = new ArrayList<>();
+	public List<BimBotServerConnection> listServiceProviders() throws BimBotServiceException {
+		List<BimBotServerConnection> serviceProviders = new ArrayList<>();
 		LOGGER.info(url);
 		HttpGet get = new HttpGet(url);
 		try {
@@ -51,9 +52,9 @@ public class ServiceProviderRegistry {
 		return serviceProviders;
 	}
 
-	public BimBotServer findServiceProviderByName(String name) throws BimBotServiceException {
-		List<BimBotServer> serviceProviders = listServiceProviders();
-		for (BimBotServer bimBotServer : serviceProviders) {
+	public BimBotServerConnection findServiceProviderByName(String name) throws BimBotServiceException {
+		List<BimBotServerConnection> serviceProviders = listServiceProviders();
+		for (BimBotServerConnection bimBotServer : serviceProviders) {
 			if (bimBotServer.getName().equals(name)) {
 				return bimBotServer;
 			}

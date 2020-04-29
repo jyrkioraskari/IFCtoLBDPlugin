@@ -9,6 +9,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.bimserver.bimbotclient.beans.AccessToken;
+import org.bimserver.bimbotclient.beans.Application;
+import org.bimserver.bimbotclient.beans.Authorization;
+import org.bimserver.bimbotclient.beans.Service;
+import org.bimserver.bimbotclient.exeptions.BimBotExecutionException;
+import org.bimserver.bimbotclient.exeptions.BimBotServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +47,8 @@ public class BimBotClient {
 		return httpclient;
 	}
 	
-	public BimBotServer getServer(String name, String description, String serviceListPath) {
-		return new BimBotServer(this, name, description, serviceListPath);
+	public BimBotServerConnection getServer(String name, String description, String serviceListPath) {
+		return new BimBotServerConnection(this, name, description, serviceListPath);
 	}
 
 	public ServiceProviderRegistry getCentralServiceProviderRegistry() {

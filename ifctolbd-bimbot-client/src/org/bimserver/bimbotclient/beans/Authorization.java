@@ -1,4 +1,4 @@
-package org.bimserver.bimbotclient;
+package org.bimserver.bimbotclient.beans;
 
 import java.net.URI;
 import java.net.URISyntaxException;
