@@ -1,5 +1,9 @@
 package de.rwth_aachen.dc.lbd;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.bimserver.bimbots.BimBotContext;
 import org.bimserver.bimbots.BimBotsException;
 import org.bimserver.bimbots.BimBotsInput;
@@ -7,6 +11,7 @@ import org.bimserver.bimbots.BimBotsOutput;
 import org.bimserver.emf.IfcModelInterface;
 import org.bimserver.plugins.PluginConfiguration;
 import org.bimserver.plugins.SchemaName;
+import org.lbd.ifc2lbd.IFCtoLBDConverter;
 
 import com.google.common.base.Charsets;
 
@@ -22,6 +27,21 @@ public class LinkedBuildingDataBIMBotService extends RWTH_BimBotAbstractService 
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("Data size "+input.getData().length);
+		
+		try {
+			File tempFile = File.createTempFile("model-", ".ifc");
+			FileUtils.writeByteArrayToFile(tempFile, input.getData());
+			
+			System.out.println("Temp ifc file:"+tempFile.getAbsolutePath());
+			String outputFile = tempFile.getAbsolutePath().substring(0, tempFile.getAbsolutePath().length() - 4) + ".ttl";
+			
+			new IFCtoLBDConverter(tempFile.getAbsolutePath(), "https://dot.dc.rwth-aachen.de/IFCtoLBDset#", outputFile, 0, true, false,
+					true, false, false, false);
+			
+			System.out.println("result: "+outputFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		BimBotsOutput output = new BimBotsOutput(SchemaName.UNSTRUCTURED_UTF8_TEXT_1_0, sb.toString().getBytes(Charsets.UTF_8));
 		output.setTitle("BimBotDemoService Results");
