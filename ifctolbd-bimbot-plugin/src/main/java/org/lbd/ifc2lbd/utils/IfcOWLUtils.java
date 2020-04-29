@@ -70,7 +70,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Site – building (bot:hasBuilding)</b>
+	 * <font color="green"> <b>Site  building (bot:hasBuilding)</b>
 	 * (inst:IfcBuilding_xx)&lt;-[ifcowl:relatedObjects_IfcRelDecomposes]-(inst:IfcRelAggregates_xx)-[ifcowl:relatingObject_IfcRelDecomposes]-&gt;(inst:IfcSite_xx)
 	 * </font>
 	 * 
@@ -89,7 +89,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Building – storeys (bot:hasStorey)</b>
+	 * <font color="green"> <b>Building  storeys (bot:hasStorey)</b>
 	 * (inst:IfcBuildingStorey_xx)&lt;-[ifcowl:relatedObjects_IfcRelDecomposes]-(inst:IfcRelAggregates_xx)-[ifcowl:relatingObjects_IfcRelDecomposes]-&gt;(inst:IfcBuilding_xx)
 	 * </font>
 	 * 
@@ -106,7 +106,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Storeys – spaces (bot:hasSpace)</b>
+	 * <font color="green"> <b>Storeys  spaces (bot:hasSpace)</b>
 	 * (inst:IfcSpace_xx)&lt;-[ifcowl:relatedObjects_IfcRelDecomposes]-(inst:IfcRelAggregates_xx)-[ifcowl:relatingObjects_IfcRelDecomposes]-&gt;(inst:IfcBuildingStorey_xx)
 	 * <P>
 	 * <b>OR</b>
@@ -136,7 +136,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Storeys – elements (bot:containsElement)</b>
+	 * <font color="green"> <b>Storeys  elements (bot:containsElement)</b>
 	 * (inst:IfcDoor_xx)&lt;-[ifcowl:relatedElements_IfcRelContainedInSpatialStructure]-(inst:IfcRelContainedInSpatialStructure_xx)-[ifcowl:relatingStructure_IfcRelContainedInSpatialStructure]-&gt;(inst:IfcBuildingStorey_xx)
 	 *
 	 * <P>
@@ -169,7 +169,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Spaces – elements (bot:containsElement)</b>
+	 * <font color="green"> <b>Spaces  elements (bot:containsElement)</b>
 	 * (inst:IfcFurnishingElement_xx)&lt;-[ifcowl:relatedElements_IfcRelContainedInSpatialStructure]-(inst:IfcRelContainedInSpatialStructure_xx)-[ifcowl:relatingStructure_IfcRelContainedInSpatialStructure]-&gt;(inst:IfcSpace_xx)
 	 * 
 	 * </font>
@@ -191,7 +191,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Spaces – elements (bot:adjacentElement)</b>
+	 * <font color="green"> <b>Spaces  elements (bot:adjacentElement)</b>
 	 * (inst:IfcDoor_xx)&lt;-[ifcowl:relatedBuildingElement_IfcRelSpaceBoundary]-(inst:IfcRelSpaceBoundary_xx)-[ifcowl:relatingSpace_IfcRelSpaceBoundary]-&gt;(inst:IfcSpace_xx)
 	 * 
 	 * </font>
@@ -211,7 +211,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Element – element (bot:hostsElement)</b>
+	 * <font color="green"> <b>Element element (bot:hostsElement)</b>
 	 * (inst:IfcDoor_xx)&lt;-[ifcowl:relatedBuildingElement_IfcRelFillsElement]-(inst:IfcRelFillsElement_xx)-[ifcowl:relatingOpeningElement_IfcRelFillsElement]-&gt;(inst:IfcOpeningElement_xx)&lt;-[ifcowl:relatedOpeningElement_IfcRelVoidsElement]-(inst:IfcRelVoidsElement_xx)-[ifcowl:relatingBuildingElement_IfcRelVoidsElement]-&gt;(inst:IfcWallStandardCase_xx)
 	 * 
 	 * <P>

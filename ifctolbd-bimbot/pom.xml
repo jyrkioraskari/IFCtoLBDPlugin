@@ -5,8 +5,9 @@
   <version>0.1.alpha</version>
   <packaging>pom</packaging>
   <modules>
-  	<module>../bim4ren_ifc2lbd2</module>
   	<module>../ifctolbd-bimbot-client</module>
+
+
   	<module>../ifctolbd-bimbot-plugin</module>
   </modules>
 </project>

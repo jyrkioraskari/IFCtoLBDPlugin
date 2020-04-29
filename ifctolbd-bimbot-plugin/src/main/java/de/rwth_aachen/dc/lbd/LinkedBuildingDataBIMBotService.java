@@ -30,6 +30,7 @@ public class LinkedBuildingDataBIMBotService extends RWTH_BimBotAbstractService 
 		
 		try {
 			File tempFile = File.createTempFile("model-", ".ifc");
+			tempFile.deleteOnExit();
 			FileUtils.writeByteArrayToFile(tempFile, input.getData());
 			
 			System.out.println("Temp ifc file:"+tempFile.getAbsolutePath());

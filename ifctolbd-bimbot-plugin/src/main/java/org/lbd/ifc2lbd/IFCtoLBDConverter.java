@@ -131,6 +131,8 @@ public class IFCtoLBDConverter {
 			boolean hasSeparatePropertiesModel, boolean hasPropertiesBlankNodes, boolean hasGeolocation) {
 		this.props_level = props_level;
 		this.hasPropertiesBlankNodes = hasPropertiesBlankNodes;
+		
+		System.out.println("LBD Conversion");
 
 		if (!uriBase.endsWith("#") && !uriBase.endsWith("/"))
 			uriBase += "#";

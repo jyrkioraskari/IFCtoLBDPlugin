@@ -92,7 +92,8 @@ public class RWTHBimBotClient extends NanoHTTPD {
 			AccessToken accessToken;
 			try {
 				accessToken = bimBotClient.acquireAccessToken(service, authorization, this.ourApplication);
-				call_bimbot_service(accessToken);
+				String response=call_bimbot_service(accessToken);
+				return newFixedLengthResponse(msg+"\n"+response + "</body></html>\n");
 			} catch (BimBotServiceException e) {
 				e.printStackTrace();
 			}
@@ -106,11 +107,11 @@ public class RWTHBimBotClient extends NanoHTTPD {
 	}
 
 
-	private void call_bimbot_service(AccessToken accessToken) throws BimBotExecutionException {
+	private String call_bimbot_service(AccessToken accessToken) throws BimBotExecutionException {
 		if(!this.ifcFile.exists())
 		{
 			System.err.println("File not found.");
-			return;
+			return "";
 		}
 		ByteSource ifc_byteSource = Files.asByteSource(this.ifcFile);
 
@@ -118,6 +119,7 @@ public class RWTHBimBotClient extends NanoHTTPD {
 				ifc_byteSource, accessToken);
 		bimBotClient.execute(bimBotCall);
 		System.out.println(new String(bimBotCall.getOutputData(), Charsets.UTF_8));
+		return new String(bimBotCall.getOutputData(), Charsets.UTF_8);
 	}
 
 	public static void main(String[] args) {
