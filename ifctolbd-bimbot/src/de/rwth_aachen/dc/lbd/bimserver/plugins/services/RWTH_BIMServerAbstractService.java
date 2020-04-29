@@ -31,18 +31,22 @@ import org.slf4j.LoggerFactory;
 //Modified by Jyrki Oraskari, 2020
 
 
-public abstract class RWTHAbstractService extends ServicePlugin {
-	private static final Logger LOGGER = LoggerFactory.getLogger(RWTHAbstractService.class);
+public abstract class RWTH_BIMServerAbstractService extends ServicePlugin {
+	public enum ProgressType {
+		UNKNOWN,
+		KNOWN
+	}
+	private static final Logger LOGGER = LoggerFactory.getLogger(RWTH_BIMServerAbstractService.class);
 	private PluginContext pluginContext;
 	private String name;
 
-	public RWTHAbstractService() {
+	public RWTH_BIMServerAbstractService() {
 	}
 	
 	@Override
 	public void init(PluginContext pluginContext, PluginConfiguration systemSettings) throws PluginException {
-		this.pluginContext = pluginContext;
 		super.init(pluginContext, systemSettings);
+		this.pluginContext = pluginContext;
 	}
 
 	public PluginContext getPluginContext() {
@@ -54,10 +58,6 @@ public abstract class RWTHAbstractService extends ServicePlugin {
 		return null;
 	}
 
-	public enum ProgressType {
-		UNKNOWN,
-		KNOWN
-	}
 	
 	/**
 	 * This method gets called when there is a new revision
@@ -159,7 +159,7 @@ public abstract class RWTHAbstractService extends ServicePlugin {
 						state.setStart(runningService.getStartDate());
 						bimServerClientInterface.getRegistry().updateProgressTopic(topicId, state);
 						
-						RWTHAbstractService.this.newRevision(runningService, bimServerClientInterface, poid, roid, userToken, soid, settings);
+						RWTH_BIMServerAbstractService.this.newRevision(runningService, bimServerClientInterface, poid, roid, userToken, soid, settings);
 						
 						state = new SLongActionState();
 						state.setProgress(100);

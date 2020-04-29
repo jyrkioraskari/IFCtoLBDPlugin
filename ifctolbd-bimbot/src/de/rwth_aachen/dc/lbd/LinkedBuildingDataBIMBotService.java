@@ -10,9 +10,9 @@ import org.bimserver.plugins.SchemaName;
 
 import com.google.common.base.Charsets;
 
-import de.rwth_aachen.dc.lbd.bimserver.plugins.services.RWTHBimBotAbstractService;
+import de.rwth_aachen.dc.lbd.bimserver.plugins.services.RWTH_BimBotAbstractService;
 
-public class LinkedBuildingDataBIMBotService extends RWTHBimBotAbstractService {
+public class LinkedBuildingDataBIMBotService extends RWTH_BimBotAbstractService {
 
 	@Override
 	public BimBotsOutput runBimBot(BimBotsInput input, BimBotContext bimBotContext, PluginConfiguration pluginConfiguration) throws BimBotsException {

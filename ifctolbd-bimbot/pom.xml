@@ -54,7 +54,11 @@
 		<timestamp>${maven.build.timestamp}</timestamp>
 	</properties>
 	<dependencies>
-
+		<dependency>
+			<groupId>org.lbd.bim4ren</groupId>
+			<artifactId>ifc2lbd2</artifactId>
+			<version>1.841</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.opensourcebim</groupId>

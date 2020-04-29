@@ -29,7 +29,6 @@ import org.bimserver.bimbots.BimBotsInput;
 import org.bimserver.bimbots.BimBotsOutput;
 import org.bimserver.bimbots.BimBotsServiceInterface;
 import org.bimserver.database.queries.om.Query;
-import org.bimserver.emf.IfcModelInterface;
 import org.bimserver.emf.PackageMetaData;
 import org.bimserver.interfaces.objects.SExtendedData;
 import org.bimserver.interfaces.objects.SExtendedDataSchema;
@@ -40,7 +39,6 @@ import org.bimserver.interfaces.objects.SSerializerPluginConfiguration;
 import org.bimserver.models.store.ServiceDescriptor;
 import org.bimserver.plugins.PluginConfiguration;
 import org.bimserver.plugins.SchemaName;
-import org.bimserver.plugins.services.AbstractService;
 import org.bimserver.plugins.services.BimServerClientInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +46,8 @@ import org.slf4j.LoggerFactory;
 // Modified version of the original org.bimserver.plugins.services.BimBotAbstractService 
 // Modified by Jyrki Oraskari, 2020
 
-public abstract class RWTHBimBotAbstractService extends AbstractService implements BimBotsServiceInterface {
-	private static final Logger LOGGER = LoggerFactory.getLogger(RWTHBimBotAbstractService.class);
+public abstract class RWTH_BimBotAbstractService extends RWTH_BIMServerAbstractService implements BimBotsServiceInterface {
+	private static final Logger LOGGER = LoggerFactory.getLogger(RWTH_BimBotAbstractService.class);
 
 	@Override
 	public void newRevision(RunningService runningService, BimServerClientInterface bimServerClientInterface, long poid, long roid, String userToken, long soid, SObjectType settings) throws Exception {
@@ -64,10 +62,12 @@ public abstract class RWTHBimBotAbstractService extends AbstractService implemen
 				data = outputStream.toByteArray();
 			}
 			
-			//TODO cannot be only one IFC versio!!
+			//TODO cannot be only one IFC version!!
 			BimBotsInput input = new BimBotsInput(SchemaName.IFC_STEP_2X3TC1, data);
 			SProject project = bimServerClientInterface.getServiceInterface().getProjectByPoid(poid);
+			System.out.println("Project: "+project);
 			String contextId = project.getUuid().toString();
+			System.out.println("Context id: "+contextId);
 			//IfcModelInterface model = bimServerClientInterface.getModel(project, roid, preloadCompleteModel(), false, requiresGeometry());
 			//input.setIfcModel(model);
 			BimBotContext bimBotContext = new BimBotContext() {
@@ -96,7 +96,7 @@ public abstract class RWTHBimBotAbstractService extends AbstractService implemen
 				output.getModel().checkin(poid, output.getTitle());
 			} else {
 				SFile file = new SFile();
-				
+				System.out.println("SFile generation");
 				SExtendedData extendedData = new SExtendedData();
 				extendedData.setTimeToGenerate((end - start) / 1000000);
 				extendedData.setTitle(output.getTitle());
