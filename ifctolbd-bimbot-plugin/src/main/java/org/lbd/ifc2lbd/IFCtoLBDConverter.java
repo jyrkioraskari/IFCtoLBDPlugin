@@ -27,7 +27,6 @@ import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.buildingsmart.tech.ifcowl.IfcSpfReader;
 import org.lbd.ifc2lbd.geo.IFC_Geolocation;
 import org.lbd.ifc2lbd.geo.WktLiteral;
 import org.lbd.ifc2lbd.messages.SystemStatusEvent;
@@ -41,6 +40,8 @@ import org.lbd.ifc2lbd.utils.rdfpath.RDFStep;
 
 import com.google.common.eventbus.EventBus;
 import com.openifctools.guidcompressor.GuidCompressor;
+
+import be.ugent.IfcSpfReader;
 
 
 /*

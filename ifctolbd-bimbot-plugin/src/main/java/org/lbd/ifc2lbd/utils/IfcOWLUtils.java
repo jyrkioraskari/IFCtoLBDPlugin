@@ -17,10 +17,11 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
-import org.buildingsmart.tech.ifcowl.IfcSpfReader;
 import org.lbd.ifc2lbd.ns.IfcOWLNameSpace;
 import org.lbd.ifc2lbd.utils.rdfpath.InvRDFStep;
 import org.lbd.ifc2lbd.utils.rdfpath.RDFStep;
+
+import be.ugent.IfcSpfReader;
 
 /*
  *  Copyright (c) 2017 Jyrki Oraskari (Jyrki.Oraskari@gmail.f)
