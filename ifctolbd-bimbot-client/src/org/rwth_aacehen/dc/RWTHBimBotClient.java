@@ -62,10 +62,12 @@ public class RWTHBimBotClient extends NanoHTTPD {
 			e.printStackTrace();
 		}
 
+		// implement wait..
 	}
 
 	
 	// Authentication response call-back 
+	// This is called repeatedly
 	@Override
 	public Response serve(IHTTPSession session) {
 

@@ -21,6 +21,8 @@ import org.lbd.ifc2lbd.utils.rdfpath.RDFStep;
 
 import com.google.common.eventbus.EventBus;
 
+import be.ugent.IfcSpfReader;
+
 
 /*
  *  Copyright (c) 2017 Jyrki Oraskari (Jyrki.Oraskari@gmail.f)
@@ -99,6 +101,8 @@ public class RDFUtils {
 					in = IFCtoLBDConverter.class.getResourceAsStream("/resources/" + ontology_file);
 					if (in == null)
 						in = IFCtoLBDConverter.class.getResourceAsStream("/" + ontology_file);
+					if (in == null)
+						in = IFCtoLBDConverter.class.getResourceAsStream("/src/main/resources/" +ontology_file);
 				} catch (Exception e) {
 					eventBus.post(new SystemStatusEvent("Error : " + e.getMessage()));
 					e.printStackTrace();

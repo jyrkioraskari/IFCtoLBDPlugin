@@ -1,14 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>de.rwth-aachen.dc.lbd</groupId>
-  <artifactId>IFCtoLBD_BIMBot-Plugin</artifactId>
-  <version>0.1.alpha</version>
-  <description>IFCtoLBD BimBot service for BIMserver</description>
-  <organization>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.rwth-aachen.dc.lbd</groupId>
+	<artifactId>IFCtoLBD_BIMBot-Plugin</artifactId>
+	<version>0.1.alpha</version>
+	<description>IFCtoLBD BimBot service for BIMserver</description>
+	<organization>
 		<name>RWTH-Aachen DC</name>
 		<url>dc.rwth-aachen.de</url>
 	</organization>
-  <licenses>
+	<licenses>
 		<license>
 			<name>GNU Affero General Public License</name>
 			<url>http://www.gnu.org/licenses/agpl-3.0.en.html</url>
@@ -25,18 +27,22 @@
 			<email>ruben@logic-labs.nl</email>
 		</developer>
 	</developers>
-	
+
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
-		
-		<!-- Affects object encoding when reading binary .ser files  (use .ser.xml instead): -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
-		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<timestamp>${maven.build.timestamp}</timestamp>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream -->
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.4.12</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -55,7 +61,7 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
 		</dependency>
-	
+
 		<!-- https://mvnrepository.com/artifact/org.apache.jena/jena-arq -->
 		<dependency>
 			<groupId>org.apache.jena</groupId>
@@ -80,11 +86,15 @@
 			<artifactId>guava</artifactId>
 			<version>23.0</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>com.github.pipauwel</groupId>
+			<artifactId>ifcParserLib</artifactId>
+			<version>0.777</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
-		    <resource>
+			<resource>
 				<targetPath></targetPath>
 				<filtering>true</filtering>
 				<directory>src/main/resources</directory>
@@ -142,6 +152,6 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<name>IFCtoLBD_BIMBot-Plugin</name>
 </project>

@@ -135,15 +135,18 @@ public class IFCtoLBDConverter {
 		
 		System.out.println("LBD Conversion");
 
+		ontology_model = ModelFactory.createDefaultModel();
+		eventBus.post(new SystemStatusEvent("IFCtoRDF conversion"));
+		
+		// No # in the uriBase
+		ifcowl_model = readAndConvertIFC(ifc_filename, uriBase); // Before: readInOntologies(ifc_filename);
+
+		// Modified the order of the lines (JO 2020)
 		if (!uriBase.endsWith("#") && !uriBase.endsWith("/"))
 			uriBase += "#";
 		this.uriBase = uriBase;
-		ontology_model = ModelFactory.createDefaultModel();
-		eventBus.post(new SystemStatusEvent("IFCtoRDF conversion"));
-		ifcowl_model = readAndConvertIFC(ifc_filename, uriBase); // Before: readInOntologies(ifc_filename);
 
 		eventBus.post(new SystemStatusEvent("Reading in ontologies"));
-
 		readInOntologies(ifc_filename);
 		createIfcLBDProductMapping();
 
