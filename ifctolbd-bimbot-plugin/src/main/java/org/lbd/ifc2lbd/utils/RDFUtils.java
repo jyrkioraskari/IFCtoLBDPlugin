@@ -15,13 +15,10 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
-import org.lbd.ifc2lbd.IFCtoLBDConverter;
 import org.lbd.ifc2lbd.messages.SystemStatusEvent;
 import org.lbd.ifc2lbd.utils.rdfpath.RDFStep;
 
 import com.google.common.eventbus.EventBus;
-
-import be.ugent.IfcSpfReader;
 
 
 /*
@@ -95,14 +92,14 @@ public class RDFUtils {
 
 		InputStream in = null;
 		try {
-			in = IFCtoLBDConverter.class.getResourceAsStream("/" + ontology_file);
+			in = RDFUtils.class.getResourceAsStream("/" + ontology_file);
 			if (in == null) {
 				try {
-					in = IFCtoLBDConverter.class.getResourceAsStream("/resources/" + ontology_file);
+					in = RDFUtils.class.getResourceAsStream("/resources/" + ontology_file);
 					if (in == null)
-						in = IFCtoLBDConverter.class.getResourceAsStream("/" + ontology_file);
+						in = RDFUtils.class.getResourceAsStream("/" + ontology_file);
 					if (in == null)
-						in = IFCtoLBDConverter.class.getResourceAsStream("/src/main/resources/" +ontology_file);
+						in = RDFUtils.class.getResourceAsStream("/src/main/resources/" +ontology_file);
 				} catch (Exception e) {
 					eventBus.post(new SystemStatusEvent("Error : " + e.getMessage()));
 					e.printStackTrace();

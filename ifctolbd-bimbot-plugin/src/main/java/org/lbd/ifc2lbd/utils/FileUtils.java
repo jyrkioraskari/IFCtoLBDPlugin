@@ -1,15 +1,16 @@
 package org.lbd.ifc2lbd.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import org.lbd.ifc2lbd.IFCtoLBDConverter;
 
 
 /*
@@ -45,17 +46,20 @@ public class FileUtils {
 		List<String> goodFiles = new ArrayList<>();
 		System.out.println("read files /" + dir);
 
-		CodeSource src = IFCtoLBDConverter.class.getProtectionDomain().getCodeSource();
+		CodeSource src = FileUtils.class.getProtectionDomain().getCodeSource();
 		try {
 			if (src != null) {
 				URL jar = src.getLocation();
-				ZipInputStream zip;
+				System.out.println("JO URL for ZIP "+jar);
+				
+				ZipInputStream zip;				
 				zip = new ZipInputStream(jar.openStream());
 				while (true) {
 					ZipEntry e = zip.getNextEntry();
 					if (e == null)
 						break;
 					String name = e.getName();
+					System.out.println(("listed ontology file name: "+name));
 					if (name.startsWith("/" + dir)) {
 						if (name.contains("_") && name.endsWith(extension))
 							goodFiles.add(name);
@@ -72,6 +76,41 @@ public class FileUtils {
 		return goodFiles;
 	}
 
+	// https://stackoverflow.com/questions/3923129/get-a-list-of-resources-from-classpath-directory
+	public static List<String> getListofresourceFiles(String path, String dir, String extension) {		
+		List<String> goodFiles = new ArrayList<>();
+		    try (
+		            InputStream in = getResourceAsStream(path);
+		            BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+		        String fname;
+
+		        while ((fname = br.readLine()) != null) {
+					System.out.println("JO lists ofile: "+fname);
+		            if (fname.startsWith("/" + dir)) {
+						if (fname.contains("_") && fname.endsWith(extension))
+						{
+							System.out.println("JO adds ofile: "+fname);
+							goodFiles.add(fname);
+						}
+					}
+		        }
+		    } catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		    return goodFiles;
+	}
+	
+	private static InputStream getResourceAsStream(String resource) {
+	    final InputStream in
+	            = getContextClassLoader().getResourceAsStream(resource);
+
+	    return in == null ? FileUtils.getResourceAsStream(resource) : in;
+	}
+
+	private static ClassLoader getContextClassLoader() {
+	    return Thread.currentThread().getContextClassLoader();
+	}
 	
 	/**
 	 * 
