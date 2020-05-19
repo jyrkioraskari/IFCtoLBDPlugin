@@ -41,7 +41,7 @@ import org.lbd.ifc2lbd.utils.StringOperations;
  * 
  *
  */
-public class PropertySet {
+public class PropertySet_SMLS {
 	private class PsetProperty {
 		final Property p; // Jena RDF property
 		final Resource r; // Jena RDF resource object
@@ -57,22 +57,16 @@ public class PropertySet {
 	private final Model lbd_model;
 	private String propertyset_name;
 
-	private final int props_level;
-	private final boolean hasBlank_nodes;
-
 	private final Map<String, RDFNode> mapPnameValue = new HashMap<>();
 	private final Map<String, RDFNode> mapBSDD = new HashMap<>();
 
 	private boolean is_bSDD_pset = false;
 	private Resource psetDef = null;
 
-	public PropertySet(String uriBase, Model lbd_model, Model ontology_model, String propertyset_name, int props_level,
-			boolean hasBlank_nodes) {
+	public PropertySet_SMLS(String uriBase, Model lbd_model, Model ontology_model, String propertyset_name) {
 		this.uriBase = uriBase;
 		this.lbd_model = lbd_model;
 		this.propertyset_name = propertyset_name;
-		this.props_level = props_level;
-		this.hasBlank_nodes = hasBlank_nodes;
 		StmtIterator iter = ontology_model.listStatements(null, LBD_NS.PROPS_NS.namePset, this.propertyset_name);
 		if (iter.hasNext()) {
 			is_bSDD_pset = true;
@@ -109,58 +103,35 @@ public class PropertySet {
 	Set<String> hashes = new HashSet<>();
 
 	public void connect(Resource lbd_resource, String long_guid) {
-		switch (this.props_level) {
-		case 1:
-		default:
-			for (String pname : this.mapPnameValue.keySet()) {
-				Property property = lbd_resource.getModel()
-						.createProperty(LBD_NS.PROPS_NS.props_ns + pname + "_simple");
-				lbd_resource.addProperty(property, this.mapPnameValue.get(pname));
-			}
-			break;
-		case 2:
-		case 3:
-			if (hashes.add(long_guid)) {
-				List<PsetProperty> properties = writeOPM_Set(long_guid);
-				for (PsetProperty pp : properties) {
-					if (!this.lbd_model.listStatements(lbd_resource, pp.p, pp.r).hasNext()) {
-						lbd_resource.addProperty(pp.p, pp.r);
-					}
+		if (hashes.add(long_guid)) {
+			List<PsetProperty> properties = writeOPM_Set(long_guid);
+			for (PsetProperty pp : properties) {
+				if (!this.lbd_model.listStatements(lbd_resource, pp.p, pp.r).hasNext()) {
+					lbd_resource.addProperty(pp.p, pp.r);
 				}
 			}
-			break;
 		}
 	}
-
 
 	private List<PsetProperty> writeOPM_Set(String long_guid) {
 		List<PsetProperty> properties = new ArrayList<>();
 		for (String k : this.mapPnameValue.keySet()) {
 			Resource property_resource;
-			if (this.hasBlank_nodes)
-				property_resource = this.lbd_model.createResource();
-			else
-				property_resource = this.lbd_model.createResource(this.uriBase + k + "_" + long_guid);
+			property_resource = this.lbd_model.createResource(this.uriBase + k + "_" + long_guid);
 
 			if (mapBSDD.get(k) != null)
 				property_resource.addProperty(LBD_NS.PROPS_NS.isBSDDProp, mapBSDD.get(k));
 
-			if (this.props_level == 3) {
-				Resource state_resourse;
-				if (this.hasBlank_nodes)
-					state_resourse = this.lbd_model.createResource();
-				else
-					state_resourse = this.lbd_model.createResource(
-							this.uriBase + "state_" + k + "_" + long_guid + "_" + System.currentTimeMillis());
-				property_resource.addProperty(OPM.hasState, state_resourse);
+			Resource state_resourse;
+			state_resourse = this.lbd_model
+					.createResource(this.uriBase + "state_" + k + "_" + long_guid + "_" + System.currentTimeMillis());
+			property_resource.addProperty(OPM.hasState, state_resourse);
 
-				LocalDateTime datetime = LocalDateTime.now();
-				String time_string = datetime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-				state_resourse.addProperty(RDF.type, OPM.currentState);
-				state_resourse.addLiteral(OPM.generatedAtTime, time_string);
-				state_resourse.addProperty(OPM.value, this.mapPnameValue.get(k));
-			} else
-				property_resource.addProperty(OPM.value, this.mapPnameValue.get(k));
+			LocalDateTime datetime = LocalDateTime.now();
+			String time_string = datetime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+			state_resourse.addProperty(RDF.type, OPM.currentState);
+			state_resourse.addLiteral(OPM.generatedAtTime, time_string);
+			state_resourse.addProperty(OPM.value, this.mapPnameValue.get(k));
 
 			Property p;
 			p = this.lbd_model.createProperty(LBD_NS.PROPS_NS.props_ns + StringOperations.toCamelCase(k));

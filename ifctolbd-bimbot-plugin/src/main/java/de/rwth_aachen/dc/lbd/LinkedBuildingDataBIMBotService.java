@@ -59,7 +59,7 @@ public class LinkedBuildingDataBIMBotService extends RWTH_BimBotAbstractService 
 
 	private static void extractLBD(File ifcFile, StringBuilder result_string) {
 		IFCtoLBDConverter_BIM4Ren lbdconverter= new IFCtoLBDConverter_BIM4Ren();
-		Model m=lbdconverter.convert(ifcFile.getAbsolutePath(), "https://dot.dc.rwth-aachen.de/IFCtoLBDset", 0, true, false, true, false, false, true);
+		Model m=lbdconverter.convert(ifcFile.getAbsolutePath(), "https://dot.dc.rwth-aachen.de/IFCtoLBDset");
 		
 		// https://stackoverflow.com/questions/216894/get-an-outputstream-into-a-string
 		OutputStream ttl_output = new OutputStream() {
