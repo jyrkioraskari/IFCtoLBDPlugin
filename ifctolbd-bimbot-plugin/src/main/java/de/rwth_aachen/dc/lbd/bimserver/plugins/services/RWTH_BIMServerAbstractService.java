@@ -137,7 +137,7 @@ public abstract class RWTH_BIMServerAbstractService extends ServicePlugin {
 	public void register(long uoid, SInternalServicePluginConfiguration internalService, final PluginConfiguration pluginConfiguration) {
 		name = internalService.getName();
 		ServiceDescriptor serviceDescriptor = StoreFactory.eINSTANCE.createServiceDescriptor();
-		serviceDescriptor.setProviderName("BIMserver");
+		serviceDescriptor.setProviderName("RWTH");
 		serviceDescriptor.setIdentifier("" + internalService.getOid());
 		serviceDescriptor.setName(internalService.getName());
 		serviceDescriptor.setDescription(internalService.getDescription());

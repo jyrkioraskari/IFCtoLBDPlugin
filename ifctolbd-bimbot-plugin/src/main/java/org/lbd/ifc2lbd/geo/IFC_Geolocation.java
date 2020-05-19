@@ -61,14 +61,12 @@ public class IFC_Geolocation {
     public String addGeolocation(Model model)
     {
 
-        String s = "";
-
-        System.out.println("Extracting WKT Geolocation from IFC_OWL Model");   
+        //System.out.println("Extracting WKT Geolocation from IFC_OWL Model");   
         returnLongLat(model);
 
-        s = addWKTGeometryToModel();
+        String s = addWKTGeometryToModel();
         
-        System.out.println("WKT Geolocation succesfully extracted: " + s);
+        //System.out.println("WKT Geolocation succesfully extracted: " + s);
         
         return s;
     }

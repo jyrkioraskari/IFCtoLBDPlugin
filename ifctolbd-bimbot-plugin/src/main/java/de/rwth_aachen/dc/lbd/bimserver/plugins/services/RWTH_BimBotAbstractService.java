@@ -49,6 +49,8 @@ import org.slf4j.LoggerFactory;
 public abstract class RWTH_BimBotAbstractService extends RWTH_BIMServerAbstractService implements BimBotsServiceInterface {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RWTH_BimBotAbstractService.class);
 
+	
+	// Is triggered by a new Revision Only
 	@Override
 	public void newRevision(RunningService runningService, BimServerClientInterface bimServerClientInterface, long poid, long roid, String userToken, long soid, SObjectType settings) throws Exception {
 		try {
@@ -65,9 +67,9 @@ public abstract class RWTH_BimBotAbstractService extends RWTH_BIMServerAbstractS
 			//TODO cannot be only one IFC version!!
 			BimBotsInput input = new BimBotsInput(SchemaName.IFC_STEP_2X3TC1, data);
 			SProject project = bimServerClientInterface.getServiceInterface().getProjectByPoid(poid);
-			System.out.println("Project: "+project);
+			//System.out.println("Project: "+project);
 			String contextId = project.getUuid().toString();
-			System.out.println("Context id: "+contextId);
+			//	System.out.println("Context id: "+contextId);
 			//IfcModelInterface model = bimServerClientInterface.getModel(project, roid, preloadCompleteModel(), false, requiresGeometry());
 			//input.setIfcModel(model);
 			BimBotContext bimBotContext = new BimBotContext() {
@@ -96,7 +98,7 @@ public abstract class RWTH_BimBotAbstractService extends RWTH_BIMServerAbstractS
 				output.getModel().checkin(poid, output.getTitle());
 			} else {
 				SFile file = new SFile();
-				System.out.println("SFile generation");
+				//System.out.println("SFile generation");
 				SExtendedData extendedData = new SExtendedData();
 				extendedData.setTimeToGenerate((end - start) / 1000000);
 				extendedData.setTitle(output.getTitle());

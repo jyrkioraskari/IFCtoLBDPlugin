@@ -81,7 +81,7 @@ public class IfcOWLUtils {
 	 * @return The list of all #IfcBuilding ifcOWL elements under the site element
 	 */
 	public static List<RDFNode> listBuildings(Resource site, IfcOWLNameSpace ifcOWL) {
-		System.out.println("Site: "+site.toString());
+		//System.out.println("Site: "+site.toString());
 		List<RDFNode> buildings = RDFUtils.pathQuery(site, getNextLevelPath(ifcOWL));
 		if (buildings == null || buildings.size() == 0)
 			System.err.println("No Buildings!");

@@ -14,14 +14,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.lbd.ifc2lbd.ns.Namespace;
+
 import com.buildingsmart.tech.ifcowl.vo.AttributeVO;
 import com.buildingsmart.tech.ifcowl.vo.EntityVO;
 import com.buildingsmart.tech.ifcowl.vo.NamedIndividualVO;
 import com.buildingsmart.tech.ifcowl.vo.PrimaryTypeVO;
 import com.buildingsmart.tech.ifcowl.vo.PropertyVO;
 import com.buildingsmart.tech.ifcowl.vo.TypeVO;
-
-import fi.ni.rdf.Namespace;
 
 /*
  * OWLWriter writes .ttl files representing OWL ontologies, thereby relying on the in-memory EXPRESS model that is parsed by the ExpressReader class.

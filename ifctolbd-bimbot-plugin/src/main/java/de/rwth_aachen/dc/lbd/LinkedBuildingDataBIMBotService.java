@@ -34,31 +34,14 @@ public class LinkedBuildingDataBIMBotService extends RWTH_BimBotAbstractService 
 		bimBotContext.updateProgress("Converting the model", 0);
 
 		StringBuilder result_string = new StringBuilder();
-
 		try {
 			File tempFile = File.createTempFile("model-", ".ifc");
 			tempFile.deleteOnExit();
 			FileUtils.writeByteArrayToFile(tempFile, input.getData());
 
-			System.out.println("Temp ifc file:" + tempFile.getAbsolutePath());
+			//System.out.println("Temp ifc file:" + tempFile.getAbsolutePath());
 
-			IFCtoLBDConverter_BIM4Ren lbdconverter= new IFCtoLBDConverter_BIM4Ren();
-			Model m=lbdconverter.convert(tempFile.getAbsolutePath(), "https://dot.dc.rwth-aachen.de/IFCtoLBDset", 0, true, false, true, false, false, true);
-			
-			// https://stackoverflow.com/questions/216894/get-an-outputstream-into-a-string
-			OutputStream ttl_output = new OutputStream() {
-			    private StringBuilder string = new StringBuilder();
-
-			    @Override
-			    public void write(int b) throws IOException {
-			        this.string.append((char) b );
-			    }
-			    public String toString() {
-			        return this.string.toString();
-			    }
-			};
-			m.write(ttl_output, "TTL");
-			result_string.append(ttl_output.toString());
+			extractLBD(tempFile,result_string);
 			
 			
 		} catch (IOException e) {
@@ -74,9 +57,38 @@ public class LinkedBuildingDataBIMBotService extends RWTH_BimBotAbstractService 
 		return output;
 	}
 
+	private static void extractLBD(File ifcFile, StringBuilder result_string) {
+		IFCtoLBDConverter_BIM4Ren lbdconverter= new IFCtoLBDConverter_BIM4Ren();
+		Model m=lbdconverter.convert(ifcFile.getAbsolutePath(), "https://dot.dc.rwth-aachen.de/IFCtoLBDset", 0, true, false, true, false, false, true);
+		
+		// https://stackoverflow.com/questions/216894/get-an-outputstream-into-a-string
+		OutputStream ttl_output = new OutputStream() {
+		    private StringBuilder string = new StringBuilder();
+
+		    @Override
+		    public void write(int b) throws IOException {
+		        this.string.append((char) b );
+		    }
+		    public String toString() {
+		        return this.string.toString();
+		    }
+		};
+		m.write(ttl_output, "TTL");
+		
+		result_string.append(ttl_output.toString());
+	}
+
 	@Override
 	public String getOutputSchema() {
 		return SchemaName.UNSTRUCTURED_UTF8_TEXT_1_0.name();
+	}
+	
+	
+	public static void main(String[] args) {
+		StringBuilder result_string = new StringBuilder();
+		File ifcFile=new File("c:\\test\\Duplex_A_20110505.ifc");
+		LinkedBuildingDataBIMBotService.extractLBD(ifcFile, result_string);
+		System.out.println(result_string.toString());
 	}
 
 }

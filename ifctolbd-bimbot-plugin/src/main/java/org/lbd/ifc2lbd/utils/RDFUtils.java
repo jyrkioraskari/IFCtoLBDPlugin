@@ -15,7 +15,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
-import org.lbd.ifc2lbd.messages.SystemStatusEvent;
 import org.lbd.ifc2lbd.utils.rdfpath.RDFStep;
 
 import com.google.common.eventbus.EventBus;
@@ -53,14 +52,13 @@ public class RDFUtils {
 	 * If no user interface is present, adding messages to the channel does nothing.
 	 * 
 	 */
-	public static void writeModel(Model m, String target_file,EventBus eventBus) {
+	public static void writeModel(Model m, String target_file) {
 		FileOutputStream fo = null;
 		try {
 			fo = new FileOutputStream(new File(target_file));
 			m.write(fo, "TTL");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			eventBus.post(new SystemStatusEvent("Error : " + e.getMessage()));
 		} finally {
 			if (fo != null)
 				try {
@@ -88,7 +86,7 @@ public class RDFUtils {
 	 * If no user interface is present, adding messages to the channel does nothing.
 
 	 */
-	public static void readInOntologyTTL(Model model, String ontology_file,EventBus eventBus) {
+	public static void readInOntologyTTL(Model model, String ontology_file) {
 
 		InputStream in = null;
 		try {
@@ -101,7 +99,6 @@ public class RDFUtils {
 					if (in == null)
 						in = RDFUtils.class.getResourceAsStream("/src/main/resources/" +ontology_file);
 				} catch (Exception e) {
-					eventBus.post(new SystemStatusEvent("Error : " + e.getMessage()));
 					e.printStackTrace();
 					return;
 				}
@@ -110,7 +107,6 @@ public class RDFUtils {
 			in.close();
 
 		} catch (Exception e) {
-			eventBus.post(new SystemStatusEvent("Error : " + e.getMessage()));
 			System.out.println("missing file: " + ontology_file);
 			e.printStackTrace();
 		}

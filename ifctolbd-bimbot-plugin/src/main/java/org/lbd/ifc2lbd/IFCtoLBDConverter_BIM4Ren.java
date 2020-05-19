@@ -29,7 +29,6 @@ import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.lbd.ifc2lbd.geo.IFC_Geolocation;
 import org.lbd.ifc2lbd.geo.WktLiteral;
-import org.lbd.ifc2lbd.messages.SystemStatusEvent;
 import org.lbd.ifc2lbd.ns.IfcOWLNameSpace;
 import org.lbd.ifc2lbd.ns.LBD_NS;
 import org.lbd.ifc2lbd.ns.OPM;
@@ -38,7 +37,6 @@ import org.lbd.ifc2lbd.utils.IfcOWLUtils;
 import org.lbd.ifc2lbd.utils.RDFUtils;
 import org.lbd.ifc2lbd.utils.rdfpath.RDFStep;
 
-import com.google.common.eventbus.EventBus;
 import com.openifctools.guidcompressor.GuidCompressor;
 
 import be.ugent.IfcSpfReader;
@@ -87,7 +85,6 @@ import be.ugent.IfcSpfReader;
  */
 
 public class IFCtoLBDConverter_BIM4Ren {
-	private final EventBus eventBus = EventBusService.getEventBus();
 	private Model ifcowl_model;
 	private Model ontology_model = null;
 	private Map<String, List<Resource>> ifcowl_product_map;
@@ -113,10 +110,9 @@ public class IFCtoLBDConverter_BIM4Ren {
 		this.props_level = props_level;
 		this.hasPropertiesBlankNodes = hasPropertiesBlankNodes;
 
-		System.out.println("LBD Conversion");
+		//System.out.println("LBD Conversion");
 
 		ontology_model = ModelFactory.createDefaultModel();
-		eventBus.post(new SystemStatusEvent("IFCtoRDF conversion"));
 
 		// No # in the uriBase
 		ifcowl_model = readAndConvertIFC(ifc_filename, uriBase); // Before: readInOntologies(ifc_filename);
@@ -126,7 +122,6 @@ public class IFCtoLBDConverter_BIM4Ren {
 			uriBase += "#";
 		this.uriBase = uriBase;
 
-		eventBus.post(new SystemStatusEvent("Reading in ontologies"));
 		readInOntologies(ifc_filename);
 		createIfcLBDProductMapping();
 
@@ -136,12 +131,10 @@ public class IFCtoLBDConverter_BIM4Ren {
 
 		addNamespaces(uriBase, props_level, hasBuildingElements, hasBuildingProperties);
 
-		eventBus.post(new SystemStatusEvent("IFC->LBD"));
 		if (this.ontURI.isPresent())
 			ifcOWL = new IfcOWLNameSpace(this.ontURI.get());
 		else {
 			System.out.println("No ifcOWL ontology available.");
-			eventBus.post(new SystemStatusEvent("No ifcOWL ontology available."));
 			return;
 		}
 
@@ -151,8 +144,6 @@ public class IFCtoLBDConverter_BIM4Ren {
 
 		conversion(target_file, hasBuildingElements, hasSeparateBuildingElementsModel, hasBuildingProperties,
 				hasSeparatePropertiesModel, hasGeolocation);
-
-		eventBus.post(new SystemStatusEvent("Done. Linked Building Data File is: " + target_file));
 
 	}
 
@@ -164,7 +155,7 @@ public class IFCtoLBDConverter_BIM4Ren {
 		this.props_level = props_level;
 		this.hasPropertiesBlankNodes = hasPropertiesBlankNodes;
 
-		System.out.println("LBD Conversion");
+		//System.out.println("LBD Conversion");
 
 		ontology_model = ModelFactory.createDefaultModel();
 
@@ -241,7 +232,6 @@ public class IFCtoLBDConverter_BIM4Ren {
 						});
 
 				IfcOWLUtils.listStoreys(building, ifcOWL).stream().map(rn -> rn.asResource()).forEach(storey -> {
-					eventBus.post(new SystemStatusEvent("Storey: " + storey.getLocalName()));
 
 					if (!RDFUtils.getType(storey.asResource()).get().getURI().endsWith("#IfcBuildingStorey")) {
 						System.err.println("No an #IfcBuildingStorey");
@@ -307,8 +297,7 @@ public class IFCtoLBDConverter_BIM4Ren {
 			if (hasSeparateBuildingElementsModel) {
 				String out_products_filename = target_file.substring(0, target_file.lastIndexOf("."))
 						+ "_building_elements.ttl";
-				RDFUtils.writeModel(lbd_product_output_model, out_products_filename, this.eventBus);
-				eventBus.post(new SystemStatusEvent("Building elements file is: " + out_products_filename));
+				RDFUtils.writeModel(lbd_product_output_model, out_products_filename);
 			} else
 				lbd_general_output_model.add(lbd_product_output_model);
 		}
@@ -317,9 +306,7 @@ public class IFCtoLBDConverter_BIM4Ren {
 			if (hasSeparatePropertiesModel) {
 				String out_properties_filename = target_file.substring(0, target_file.lastIndexOf("."))
 						+ "_element_properties.ttl";
-				RDFUtils.writeModel(lbd_property_output_model, out_properties_filename, this.eventBus);
-				eventBus.post(
-						new SystemStatusEvent("Building elements properties file is: " + out_properties_filename));
+				RDFUtils.writeModel(lbd_property_output_model, out_properties_filename);
 			} else
 				lbd_general_output_model.add(lbd_property_output_model);
 		}
@@ -328,11 +315,10 @@ public class IFCtoLBDConverter_BIM4Ren {
 			try {
 				addGeolocation2BOT();
 			} catch (Exception e) {
-				e.printStackTrace();
-				eventBus.post(new SystemStatusEvent("Info : No geolocation"));
+				System.err.println(e.getMessage());
 			}
 		}
-		RDFUtils.writeModel(lbd_general_output_model, target_file, this.eventBus);
+		RDFUtils.writeModel(lbd_general_output_model, target_file);
 	}
 
 	private void conversion(boolean hasBuildingElements, 
@@ -376,7 +362,6 @@ public class IFCtoLBDConverter_BIM4Ren {
 						});
 
 				IfcOWLUtils.listStoreys(building, ifcOWL).stream().map(rn -> rn.asResource()).forEach(storey -> {
-					eventBus.post(new SystemStatusEvent("Storey: " + storey.getLocalName()));
 
 					if (!RDFUtils.getType(storey.asResource()).get().getURI().endsWith("#IfcBuildingStorey")) {
 						System.err.println("No an #IfcBuildingStorey");
@@ -448,8 +433,7 @@ public class IFCtoLBDConverter_BIM4Ren {
 			try {
 				addGeolocation2BOT();
 			} catch (Exception e) {
-				e.printStackTrace();
-				eventBus.post(new SystemStatusEvent("Info : No geolocation"));
+				System.err.println(e.getMessage());
 			}
 		}
 	}
@@ -471,8 +455,8 @@ public class IFCtoLBDConverter_BIM4Ren {
 			if (RDFUtils.pathQuery(propertyset, pname_path).get(0).isLiteral()
 					&& RDFUtils.pathQuery(propertyset, pname_path).get(0).asLiteral().getString().startsWith("Pset")) {
 				String psetName = RDFUtils.pathQuery(propertyset, pname_path).get(0).asLiteral().getString();
-				System.out.println("included PSET : "
-						+ RDFUtils.pathQuery(propertyset, pname_path).get(0).asLiteral().getString());
+				//System.out.println("included PSET : "
+				//		+ RDFUtils.pathQuery(propertyset, pname_path).get(0).asLiteral().getString());
 
 				final List<RDFNode> propertyset_name = new ArrayList<>();
 				RDFUtils.pathQuery(propertyset, pname_path).forEach(name -> propertyset_name.add(name));
@@ -581,7 +565,6 @@ public class IFCtoLBDConverter_BIM4Ren {
 
 			}
 		});
-		eventBus.post(new SystemStatusEvent("LBD properties read"));
 	}
 
 	/**
@@ -651,8 +634,8 @@ public class IFCtoLBDConverter_BIM4Ren {
 
 			IfcOWLUtils.listHosted_Elements(ifc_element, ifcOWL).stream().map(rn -> rn.asResource())
 					.forEach(ifc_element2 -> {
-						if (eo.getLocalName().toLowerCase().contains("space"))
-							System.out.println("hosts: " + ifc_element + "--" + ifc_element2 + " bot:" + eo);
+						//if (eo.getLocalName().toLowerCase().contains("space"))
+						//	System.out.println("hosts: " + ifc_element + "--" + ifc_element2 + " bot:" + eo);
 						connectElement(eo, LBD_NS.BOT.hasSubElement, ifc_element2);
 					});
 
@@ -845,7 +828,7 @@ public class IFCtoLBDConverter_BIM4Ren {
 		if (ret == null) {
 			return Optional.empty();
 		} else if (ret.size() > 1) {
-			System.out.println("many " + ifcType);
+			//System.out.println("many " + ifcType);
 			return Optional.empty();
 		} else if (ret.size() > 0)
 			return Optional.of(ret.get(0));
@@ -876,7 +859,7 @@ public class IFCtoLBDConverter_BIM4Ren {
 						new ArrayList<Resource>());
 				ifcowl_product_map.put(ifcowl_class.getLocalName(), resource_list);
 				resource_list.add(product_BE_ontology_statement.getSubject());
-				System.out.println("added to resource_list : " + product_BE_ontology_statement.getSubject());
+				//System.out.println("added to resource_list : " + product_BE_ontology_statement.getSubject());
 			}
 		}
 		StmtIterator so = ontology_model.listStatements();
@@ -899,8 +882,8 @@ public class IFCtoLBDConverter_BIM4Ren {
 						List<Resource> r_list = ifcowl_product_map.getOrDefault(ifcowl_subclass.getLocalName(),
 								new ArrayList<Resource>());
 						ifcowl_product_map.put(ifcowl_subclass.getLocalName(), r_list);
-						System.out.println(
-								ifcowl_subclass.getLocalName() + " ->> " + product_BE_ontology_statement.getSubject());
+						//System.out.println(
+						//		ifcowl_subclass.getLocalName() + " ->> " + product_BE_ontology_statement.getSubject());
 						r_list.add(product_BE_ontology_statement.getSubject());
 					}
 				}
@@ -946,8 +929,6 @@ public class IFCtoLBDConverter_BIM4Ren {
 			}
 
 		} catch (Exception e) {
-			eventBus.post(new SystemStatusEvent(
-					"Error : " + e.getMessage() + " line:" + e.getStackTrace()[0].getLineNumber()));
 			e.printStackTrace();
 
 		}
@@ -966,21 +947,21 @@ public class IFCtoLBDConverter_BIM4Ren {
 		IfcOWLUtils.readIfcOWLOntology(ifc_file, ontology_model);
 		IfcOWLUtils.readIfcOWLOntology(ifc_file, ifcowl_model);
 
-		RDFUtils.readInOntologyTTL(ontology_model, "prod.ttl", this.eventBus);
+		RDFUtils.readInOntologyTTL(ontology_model, "prod.ttl");
 		// RDFUtils.readInOntologyTTL(ontology_model,
 		// "prod_building_elements.ttl",this.eventBus);
-		RDFUtils.readInOntologyTTL(ontology_model, "beo_ontology.ttl", this.eventBus);
-		RDFUtils.readInOntologyTTL(ontology_model, "prod_furnishing.ttl", this.eventBus);
+		RDFUtils.readInOntologyTTL(ontology_model, "beo_ontology.ttl");
+		RDFUtils.readInOntologyTTL(ontology_model, "prod_furnishing.ttl");
 		// RDFUtils.readInOntologyTTL(ontology_model, "prod_mep.ttl",this.eventBus);
-		RDFUtils.readInOntologyTTL(ontology_model, "mep_ontology.ttl", this.eventBus);
+		RDFUtils.readInOntologyTTL(ontology_model, "mep_ontology.ttl");
 
-		RDFUtils.readInOntologyTTL(ontology_model, "psetdef.ttl", this.eventBus);
+		RDFUtils.readInOntologyTTL(ontology_model, "psetdef.ttl");
 		List<String> files = FileUtils.getListofresourceFiles(".", "pset", ".ttl");
 		for (String file : files) {
 			file = file.substring(file.indexOf("pset"));
 			file = file.replaceAll("\\\\", "/");
-			RDFUtils.readInOntologyTTL(ontology_model, file, this.eventBus);
-			System.out.println("read ontology file : " + file);
+			RDFUtils.readInOntologyTTL(ontology_model, file);
+			//System.out.println("read ontology file : " + file);
 		}
 	}
 
@@ -1030,8 +1011,6 @@ public class IFCtoLBDConverter_BIM4Ren {
 			rr.addProperty(geo_asWKT, l);
 
 		});
-
-		eventBus.post(new SystemStatusEvent("LDB geom read"));
 
 	}
 

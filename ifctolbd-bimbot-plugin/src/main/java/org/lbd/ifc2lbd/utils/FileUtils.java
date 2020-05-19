@@ -44,13 +44,11 @@ public class FileUtils {
 	 */
 	public static List<String> getListofFiles(String dir, String extension) {
 		List<String> goodFiles = new ArrayList<>();
-		System.out.println("read files /" + dir);
 
 		CodeSource src = FileUtils.class.getProtectionDomain().getCodeSource();
 		try {
 			if (src != null) {
 				URL jar = src.getLocation();
-				System.out.println("JO URL for ZIP "+jar);
 				
 				ZipInputStream zip;				
 				zip = new ZipInputStream(jar.openStream());
@@ -59,14 +57,13 @@ public class FileUtils {
 					if (e == null)
 						break;
 					String name = e.getName();
-					System.out.println(("listed ontology file name: "+name));
 					if (name.startsWith("/" + dir)) {
 						if (name.contains("_") && name.endsWith(extension))
 							goodFiles.add(name);
 					}
 				}
 			} else {
-				System.out.println("No directory");
+				//System.out.println("No directory");
 			}
 
 		} catch (IOException e1) {
@@ -85,11 +82,11 @@ public class FileUtils {
 		        String fname;
 
 		        while ((fname = br.readLine()) != null) {
-					System.out.println("JO lists ofile: "+fname);
+					//System.out.println("JO lists ofile: "+fname);
 		            if (fname.startsWith("/" + dir)) {
 						if (fname.contains("_") && fname.endsWith(extension))
 						{
-							System.out.println("JO adds ofile: "+fname);
+							//System.out.println("JO adds ofile: "+fname);
 							goodFiles.add(fname);
 						}
 					}
