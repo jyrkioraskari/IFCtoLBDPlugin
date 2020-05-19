@@ -1,6 +1,6 @@
 # IFCtoLBD  BimBot service plugin for BIMserver
 
-
+![BIMserver BOT](https://raw.githubusercontent.com/jyrkioraskari/IFCtoLBD_BIMBot-Plugin/master/doc/architecture.png)
 
 ## GNU Affero General Public License v3.0
 
