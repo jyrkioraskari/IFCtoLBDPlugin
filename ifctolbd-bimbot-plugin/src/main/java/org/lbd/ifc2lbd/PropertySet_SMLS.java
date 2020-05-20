@@ -64,14 +64,16 @@ public class PropertySet_SMLS {
 	private Resource psetDef = null;
 
 	public PropertySet_SMLS(String uriBase, Model lbd_model, Model ontology_model, String propertyset_name) {
-		this.uriBase = uriBase;
-		this.lbd_model = lbd_model;
-		this.propertyset_name = propertyset_name;
-		StmtIterator iter = ontology_model.listStatements(null, LBD_NS.PROPS_NS.namePset, this.propertyset_name);
+		System.out.println("propertyset_name: "+propertyset_name);
+		StmtIterator iter = ontology_model.listStatements(null, LBD_NS.PROPS_NS.namePset, propertyset_name);
 		if (iter.hasNext()) {
+			
 			is_bSDD_pset = true;
 			psetDef = iter.next().getSubject();
 		}
+		this.uriBase = uriBase;
+		this.lbd_model = lbd_model;
+		this.propertyset_name = propertyset_name;
 	}
 
 	public void putPnameValue(String property_name, RDFNode value) {
@@ -89,6 +91,9 @@ public class PropertySet_SMLS {
 					Literal psetPropName = iterProp.next().getLiteral();
 					if (psetPropName.getString().equals(pname))
 						mapBSDD.put(StringOperations.toCamelCase(property.toString()), prop);
+					String camel_name=StringOperations.toCamelCase(property.toString());
+					if (psetPropName.getString().equals(camel_name))
+						mapBSDD.put(camel_name, prop);
 				}
 			}
 		}
@@ -115,26 +120,26 @@ public class PropertySet_SMLS {
 
 	private List<PsetProperty> writeOPM_Set(String long_guid) {
 		List<PsetProperty> properties = new ArrayList<>();
-		for (String k : this.mapPnameValue.keySet()) {
+		for (String key : this.mapPnameValue.keySet()) {
 			Resource property_resource;
-			property_resource = this.lbd_model.createResource(this.uriBase + k + "_" + long_guid);
+			property_resource = this.lbd_model.createResource(this.uriBase + key + "_" + long_guid);
 
-			if (mapBSDD.get(k) != null)
-				property_resource.addProperty(LBD_NS.PROPS_NS.isBSDDProp, mapBSDD.get(k));
+			if (mapBSDD.get(key) != null)
+				property_resource.addProperty(LBD_NS.PROPS_NS.isBSDDProp, mapBSDD.get(key));
 
 			Resource state_resourse;
 			state_resourse = this.lbd_model
-					.createResource(this.uriBase + "state_" + k + "_" + long_guid + "_" + System.currentTimeMillis());
+					.createResource(this.uriBase + "state_" + key + "_" + long_guid + "_" + System.currentTimeMillis());
 			property_resource.addProperty(OPM.hasState, state_resourse);
 
 			LocalDateTime datetime = LocalDateTime.now();
 			String time_string = datetime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 			state_resourse.addProperty(RDF.type, OPM.currentState);
 			state_resourse.addLiteral(OPM.generatedAtTime, time_string);
-			state_resourse.addProperty(OPM.value, this.mapPnameValue.get(k));
+			state_resourse.addProperty(OPM.value, this.mapPnameValue.get(key));
 
 			Property p;
-			p = this.lbd_model.createProperty(LBD_NS.PROPS_NS.props_ns + StringOperations.toCamelCase(k));
+			p = this.lbd_model.createProperty(LBD_NS.PROPS_NS.props_ns + StringOperations.toCamelCase(key));
 			properties.add(new PsetProperty(p, property_resource));
 		}
 		return properties;

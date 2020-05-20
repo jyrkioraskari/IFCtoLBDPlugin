@@ -82,14 +82,9 @@ public class IFCtoLBDConverter_BIM4Ren {
 		this.propertysets = new HashMap<>();
 		this.ifcowl_product_map = new HashMap<>();
 
-		// System.out.println("LBD Conversion");
-
 		ontology_model = ModelFactory.createDefaultModel();
-
-		// No # in the uriBase
 		ifcowl_model = readAndConvertIFC(ifc_filename, uriBase); // Before: readInOntologies(ifc_filename);
 
-		// Modified the order of the lines (JO 2020)
 		if (!uriBase.endsWith("#") && !uriBase.endsWith("/"))
 			uriBase += "#";
 		this.uriBase = uriBase;
@@ -251,6 +246,8 @@ public class IFCtoLBDConverter_BIM4Ren {
 					RDFUtils.pathQuery(propertySingleValue.asResource(), name_path)
 							.forEach(name -> property_name.add(name));
 
+					if (property_name.size() == 0)
+						return; // =
 					final List<RDFNode> property_value = new ArrayList<>();
 
 					RDFStep[] value_pathS = { new RDFStep(ifcOWL.getNominalValue_IfcPropertySingleValue()),
@@ -278,35 +275,10 @@ public class IFCtoLBDConverter_BIM4Ren {
 					RDFUtils.pathQuery(propertySingleValue.asResource(), value_pathL)
 							.forEach(value -> property_value.add(value));
 
-					String guid = IfcOWLUtils.getGUID(propertyset, this.ifcOWL);
-					String uncompressed_guid = GuidCompressor.uncompressGuidString(guid);
-					if (guid != null) {
-						if (property_name.size() > 0 && property_value.size() > 0) {
-							RDFNode pname = property_name.get(0);
-							RDFNode pvalue = property_value.get(0);
-							if (!pname.toString().equals(pvalue.toString())) {
-								PropertySet_SMLS ps = this.propertysets.get(propertyset.getURI());
-								if (ps == null) {
-									if (!propertyset_name.isEmpty())
-										ps = new PropertySet_SMLS(this.uriBase, lbd_general_output_model,
-												this.ontology_model, propertyset_name.get(0).toString());
-									else
-										ps = new PropertySet_SMLS(this.uriBase, lbd_general_output_model,
-												this.ontology_model, "");
-									this.propertysets.put(propertyset.getURI(), ps);
-								}
-								if (pvalue.toString().trim().length() > 0) {
-									if (pvalue.isLiteral()) {
-										String val = pvalue.asLiteral().getLexicalForm();
-										if (val.equals("-1.#IND"))
-											pvalue = ResourceFactory.createTypedLiteral(Double.NaN);
-									}
-									ps.putPnameValue(pname.toString(), pvalue);
-									ps.putPsetPropertyRef(pname);
-								}
-							}
-						} else {
-							RDFNode pname = property_name.get(0);
+					if (property_value.size() > 0) {
+						RDFNode pname = property_name.get(0);
+						RDFNode pvalue = property_value.get(0);
+						if (!pname.toString().equals(pvalue.toString())) {
 							PropertySet_SMLS ps = this.propertysets.get(propertyset.getURI());
 							if (ps == null) {
 								if (!propertyset_name.isEmpty())
@@ -315,12 +287,17 @@ public class IFCtoLBDConverter_BIM4Ren {
 								else
 									ps = new PropertySet_SMLS(this.uriBase, lbd_general_output_model,
 											this.ontology_model, "");
-
 								this.propertysets.put(propertyset.getURI(), ps);
 							}
-							ps.putPnameValue(pname.toString(), propertySingleValue);
-							ps.putPsetPropertyRef(pname);
-							RDFUtils.copyTriples(0, propertySingleValue, lbd_general_output_model);
+							if (pvalue.toString().trim().length() > 0) {
+								if (pvalue.isLiteral()) {
+									String val = pvalue.asLiteral().getLexicalForm();
+									if (val.equals("-1.#IND"))
+										pvalue = ResourceFactory.createTypedLiteral(Double.NaN);
+								}
+								ps.putPnameValue(pname.toString(), pvalue);
+								ps.putPsetPropertyRef(pname);
+							}
 						}
 					} else {
 						RDFNode pname = property_name.get(0);
@@ -332,11 +309,14 @@ public class IFCtoLBDConverter_BIM4Ren {
 							else
 								ps = new PropertySet_SMLS(this.uriBase, lbd_general_output_model, this.ontology_model,
 										"");
+
 							this.propertysets.put(propertyset.getURI(), ps);
 						}
 						ps.putPnameValue(pname.toString(), propertySingleValue);
+						ps.putPsetPropertyRef(pname);
 						RDFUtils.copyTriples(0, propertySingleValue, lbd_general_output_model);
 					}
+
 				});
 
 			}
@@ -353,11 +333,11 @@ public class IFCtoLBDConverter_BIM4Ren {
 	 */
 	private void addNamespaces(String uriBase) {
 		LBD_NS.BOT.addNameSpace(lbd_general_output_model);
-
+		LBD_NS.SMLS.addNameSpace(lbd_general_output_model);
 		LBD_NS.Product.addNameSpace(lbd_general_output_model);
-
 		LBD_NS.PROPS_NS.addNameSpace(lbd_general_output_model);
 		LBD_NS.PROPS_NS.addNameSpace(lbd_general_output_model);
+		
 		OPM.addNameSpacesL3(lbd_general_output_model);
 
 		lbd_general_output_model.setNsPrefix("rdf", RDF.uri);

@@ -7,6 +7,15 @@ import org.apache.jena.rdf.model.Resource;
 
 public class LBD_NS extends abstract_NS{
 	
+	public static class SMLS {
+		public static final String SMLS_ns = "https://w3id.org/bot#";
+		public static void addNameSpace(Model model)
+		{
+			model.setNsPrefix("smls", SMLS_ns);
+		}
+		
+	}
+	
 	
 	public static class BOT {
 		public static final String bot_ns = "https://w3id.org/bot#";
@@ -72,7 +81,8 @@ public class LBD_NS extends abstract_NS{
 		}
 		
 		//public static final Resource props=resource(props_ns,"Pset");
-		//public static final Property partofPset=property(props_ns, "partOfPset");		
+		//public static final Property partofPset=property(props_ns, "partOfPset");	
+		
 		public static final Property isBSDDProp=property(bsddprops_ns, "isBSDDProperty");	
 		public static final Property namePset=property(psd_ns, "name");
 		public static final Property ifdGuidProperty=property(psd_ns,"ifdguid");

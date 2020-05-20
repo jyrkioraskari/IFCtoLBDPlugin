@@ -71,7 +71,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Site  building (bot:hasBuilding)</b>
+	 * <font color="green"> <b>Site building (bot:hasBuilding)</b>
 	 * (inst:IfcBuilding_xx)&lt;-[ifcowl:relatedObjects_IfcRelDecomposes]-(inst:IfcRelAggregates_xx)-[ifcowl:relatingObject_IfcRelDecomposes]-&gt;(inst:IfcSite_xx)
 	 * </font>
 	 * 
@@ -81,7 +81,7 @@ public class IfcOWLUtils {
 	 * @return The list of all #IfcBuilding ifcOWL elements under the site element
 	 */
 	public static List<RDFNode> listBuildings(Resource site, IfcOWLNameSpace ifcOWL) {
-		//System.out.println("Site: "+site.toString());
+		// System.out.println("Site: "+site.toString());
 		List<RDFNode> buildings = RDFUtils.pathQuery(site, getNextLevelPath(ifcOWL));
 		if (buildings == null || buildings.size() == 0)
 			System.err.println("No Buildings!");
@@ -90,7 +90,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Building  storeys (bot:hasStorey)</b>
+	 * <font color="green"> <b>Building storeys (bot:hasStorey)</b>
 	 * (inst:IfcBuildingStorey_xx)&lt;-[ifcowl:relatedObjects_IfcRelDecomposes]-(inst:IfcRelAggregates_xx)-[ifcowl:relatingObjects_IfcRelDecomposes]-&gt;(inst:IfcBuilding_xx)
 	 * </font>
 	 * 
@@ -107,7 +107,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Storeys  spaces (bot:hasSpace)</b>
+	 * <font color="green"> <b>Storeys spaces (bot:hasSpace)</b>
 	 * (inst:IfcSpace_xx)&lt;-[ifcowl:relatedObjects_IfcRelDecomposes]-(inst:IfcRelAggregates_xx)-[ifcowl:relatingObjects_IfcRelDecomposes]-&gt;(inst:IfcBuildingStorey_xx)
 	 * <P>
 	 * <b>OR</b>
@@ -137,7 +137,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Storeys  elements (bot:containsElement)</b>
+	 * <font color="green"> <b>Storeys elements (bot:containsElement)</b>
 	 * (inst:IfcDoor_xx)&lt;-[ifcowl:relatedElements_IfcRelContainedInSpatialStructure]-(inst:IfcRelContainedInSpatialStructure_xx)-[ifcowl:relatingStructure_IfcRelContainedInSpatialStructure]-&gt;(inst:IfcBuildingStorey_xx)
 	 *
 	 * <P>
@@ -170,7 +170,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Spaces  elements (bot:containsElement)</b>
+	 * <font color="green"> <b>Spaces elements (bot:containsElement)</b>
 	 * (inst:IfcFurnishingElement_xx)&lt;-[ifcowl:relatedElements_IfcRelContainedInSpatialStructure]-(inst:IfcRelContainedInSpatialStructure_xx)-[ifcowl:relatingStructure_IfcRelContainedInSpatialStructure]-&gt;(inst:IfcSpace_xx)
 	 * 
 	 * </font>
@@ -192,7 +192,7 @@ public class IfcOWLUtils {
 
 	/**
 	 * 
-	 * <font color="green"> <b>Spaces  elements (bot:adjacentElement)</b>
+	 * <font color="green"> <b>Spaces elements (bot:adjacentElement)</b>
 	 * (inst:IfcDoor_xx)&lt;-[ifcowl:relatedBuildingElement_IfcRelSpaceBoundary]-(inst:IfcRelSpaceBoundary_xx)-[ifcowl:relatingSpace_IfcRelSpaceBoundary]-&gt;(inst:IfcSpace_xx)
 	 * 
 	 * </font>
@@ -327,6 +327,21 @@ public class IfcOWLUtils {
 	 */
 	public static List<RDFNode> listPropertysets(Resource resource, IfcOWLNameSpace ifcOWL) {
 		return RDFUtils.pathQuery(resource, getPropertySetPath(ifcOWL));
+	}
+
+	public static List<RDFNode> getUnitsAssignments(IfcOWLNameSpace ifcOWL, Model ifcowl_model) {
+		List<RDFNode> projectUnitsAssignments = getProjectUnitsAssignment(ifcOWL, ifcowl_model);
+		if (!projectUnitsAssignments.isEmpty()) {
+			Resource projectUnitsAssignment=projectUnitsAssignments.get(0).asResource();  // only one
+			RDFStep[] path = { new RDFStep(ifcOWL.getUnits_IfcUnitAssignment()) };
+			return RDFUtils.pathQuery(projectUnitsAssignment, path);
+		}
+		return new ArrayList<RDFNode>();
+	}
+
+	public static List<RDFNode> getProjectUnitsAssignment(IfcOWLNameSpace ifcOWL, Model ifcowl_model) {
+		RDFStep[] path = { new InvRDFStep(RDF.type) };
+		return RDFUtils.pathQuery(ifcowl_model.getResource(ifcOWL.getIfcUnitAssignment()), path);
 	}
 
 	/**
