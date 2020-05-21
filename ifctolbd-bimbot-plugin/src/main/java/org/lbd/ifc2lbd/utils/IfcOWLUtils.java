@@ -329,19 +329,10 @@ public class IfcOWLUtils {
 		return RDFUtils.pathQuery(resource, getPropertySetPath(ifcOWL));
 	}
 
-	public static List<RDFNode> getUnitsAssignments(IfcOWLNameSpace ifcOWL, Model ifcowl_model) {
-		List<RDFNode> projectUnitsAssignments = getProjectUnitsAssignment(ifcOWL, ifcowl_model);
-		if (!projectUnitsAssignments.isEmpty()) {
-			Resource projectUnitsAssignment=projectUnitsAssignments.get(0).asResource();  // only one
-			RDFStep[] path = { new RDFStep(ifcOWL.getUnits_IfcUnitAssignment()) };
-			return RDFUtils.pathQuery(projectUnitsAssignment, path);
-		}
-		return new ArrayList<RDFNode>();
-	}
-
-	public static List<RDFNode> getProjectUnitsAssignment(IfcOWLNameSpace ifcOWL, Model ifcowl_model) {
+	
+	public static List<RDFNode> getProjectSIUnits(IfcOWLNameSpace ifcOWL, Model ifcowl_model) {
 		RDFStep[] path = { new InvRDFStep(RDF.type) };
-		return RDFUtils.pathQuery(ifcowl_model.getResource(ifcOWL.getIfcUnitAssignment()), path);
+		return RDFUtils.pathQuery(ifcowl_model.getResource(ifcOWL.getIfcSIUnit()), path);
 	}
 
 	/**

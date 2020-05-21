@@ -38,10 +38,13 @@ public class IfcOWLNameSpace extends abstract_NS {
 	private final Property description;
 	private final Property name;
 	private final Property longName;
-	private final Property units_IfcUnitAssignment;
-	
 	private final Property guid;
 
+	private final Property units_IfcUnitAssignment;
+	private final Property unitType_IfcNamedUnit;
+	private final Property name_IfcSIUnit;
+	
+	
 	private final String IfcBuilding;
 	private final String IfcSite;
 	private final String IfcSpace;
@@ -49,8 +52,6 @@ public class IfcOWLNameSpace extends abstract_NS {
 	private final String IfcPropertySet;
 	private final String IfcUnitAssignment;
 	private final String IfcSIUnit;
-	private final String unitType_IfcNamedUnit;
-	private final String name_IfcSIUnit;
 	private final String LENGTHUNIT;
 	private final String AREAUNIT;
 	private final String VOLUMEUNIT;
@@ -96,8 +97,8 @@ public class IfcOWLNameSpace extends abstract_NS {
 		IfcUnitAssignment = ifcURI + "#IfcUnitAssignment";
 		IfcSIUnit = ifcURI + "#IfcSIUnit";
 		
-		unitType_IfcNamedUnit = ifcURI + "#unitType_IfcNamedUnit";
-		name_IfcSIUnit = ifcURI + "#name_IfcSIUnit";
+		unitType_IfcNamedUnit = property(ifcURI, "#unitType_IfcNamedUnit");
+		name_IfcSIUnit = property(ifcURI, "#name_IfcSIUnit");
 		LENGTHUNIT= ifcURI + "#LENGTHUNIT";
 		AREAUNIT= ifcURI + "#AREAUNIT";
 		VOLUMEUNIT= ifcURI + "#VOLUMEUNIT";
@@ -161,10 +162,18 @@ public class IfcOWLNameSpace extends abstract_NS {
 	public Property getGuid() {
 		return guid;
 	}
-	
+
 	public Property getUnits_IfcUnitAssignment() {
 		return units_IfcUnitAssignment;
 	}
+	public Property getUnitType_IfcNamedUnit() {
+		return unitType_IfcNamedUnit;
+	}
+
+	public Property getName_IfcSIUnit() {
+		return name_IfcSIUnit;
+	}
+
 	
 	public String getIfcBuilding() {
 		return IfcBuilding;
@@ -187,13 +196,6 @@ public class IfcOWLNameSpace extends abstract_NS {
 	}
 	
 
-	public String getUnitType_IfcNamedUnit() {
-		return unitType_IfcNamedUnit;
-	}
-
-	public String getName_IfcSIUnit() {
-		return name_IfcSIUnit;
-	}
 
 
 	public String getLENGTHUNIT() {

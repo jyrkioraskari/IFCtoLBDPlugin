@@ -35,6 +35,7 @@ import org.lbd.ifc2lbd.ns.OPM;
 import org.lbd.ifc2lbd.utils.FileUtils;
 import org.lbd.ifc2lbd.utils.IfcOWLUtils;
 import org.lbd.ifc2lbd.utils.RDFUtils;
+import org.lbd.ifc2lbd.utils.rdfpath.InvRDFStep;
 import org.lbd.ifc2lbd.utils.rdfpath.RDFStep;
 
 import com.openifctools.guidcompressor.GuidCompressor;
@@ -216,6 +217,8 @@ public class IFCtoLBDConverter_BIM4Ren {
 		}
 	}
 
+	private final Map<String, String> unitmap = new HashMap<>();
+
 	/**
 	 * Collects the PropertySet data from the ifcOWL model and creates a separate
 	 * Apache Jena Model that contains the converted representation of the property
@@ -226,6 +229,25 @@ public class IFCtoLBDConverter_BIM4Ren {
 	 * @param hasPropertiesBlankNodes If the nameless nodes are used.
 	 */
 	private void handlePropertySetData() {
+
+		List<RDFNode> units = IfcOWLUtils.getProjectSIUnits(ifcOWL, ifcowl_model);
+		for (RDFNode ru : units) {
+			RDFStep[] namedUnit_path = { new RDFStep(ifcOWL.getUnitType_IfcNamedUnit()) };
+			List<RDFNode> r1 = RDFUtils.pathQuery(ru.asResource(), namedUnit_path);
+
+			String named_unit = null;
+			for (RDFNode l1 : r1)
+				named_unit = l1.asResource().getLocalName().substring(0, l1.asResource().getLocalName().length() - 4);
+
+			RDFStep[] siUnit_path = { new RDFStep(ifcOWL.getName_IfcSIUnit()) };
+			List<RDFNode> r2 = RDFUtils.pathQuery(ru.asResource(), siUnit_path);
+			String si_unit = null;
+			for (RDFNode l2 : r2)
+				si_unit = l2.asResource().getLocalName();
+			if (named_unit != null && si_unit != null)
+				unitmap.put(named_unit.toLowerCase(), si_unit);
+		}
+
 		IfcOWLUtils.listPropertysets(ifcOWL, ifcowl_model).stream().map(rn -> rn.asResource()).forEach(propertyset -> {
 
 			RDFStep[] pname_path = { new RDFStep(ifcOWL.getName_IfcRoot()), new RDFStep(ifcOWL.getHasString()) };
@@ -249,6 +271,12 @@ public class IFCtoLBDConverter_BIM4Ren {
 					if (property_name.size() == 0)
 						return; // =
 					final List<RDFNode> property_value = new ArrayList<>();
+					final List<RDFNode> property_type = new ArrayList<>();
+
+					RDFStep[] type_path = { new RDFStep(ifcOWL.getNominalValue_IfcPropertySingleValue()),
+							new RDFStep(RDF.type) };
+					RDFUtils.pathQuery(propertySingleValue.asResource(), type_path)
+							.forEach(type -> property_type.add(type));
 
 					RDFStep[] value_pathS = { new RDFStep(ifcOWL.getNominalValue_IfcPropertySingleValue()),
 							new RDFStep(ifcOWL.getHasString()) };
@@ -275,20 +303,25 @@ public class IFCtoLBDConverter_BIM4Ren {
 					RDFUtils.pathQuery(propertySingleValue.asResource(), value_pathL)
 							.forEach(value -> property_value.add(value));
 
+					RDFNode pname = property_name.get(0);
+					PropertySet_SMLS ps = this.propertysets.get(propertyset.getURI());
+					if (ps == null) {
+						if (!propertyset_name.isEmpty())
+							ps = new PropertySet_SMLS(this.uriBase, lbd_general_output_model, this.ontology_model,
+									propertyset_name.get(0).toString(), unitmap);
+						else
+							ps = new PropertySet_SMLS(this.uriBase, lbd_general_output_model, this.ontology_model, "",
+									unitmap);
+						this.propertysets.put(propertyset.getURI(), ps);
+					}
+					if (property_type.size() > 0) {
+						RDFNode ptype = property_type.get(0);
+						ps.putPnameType(pname.toString(), ptype);
+					}
+
 					if (property_value.size() > 0) {
-						RDFNode pname = property_name.get(0);
 						RDFNode pvalue = property_value.get(0);
 						if (!pname.toString().equals(pvalue.toString())) {
-							PropertySet_SMLS ps = this.propertysets.get(propertyset.getURI());
-							if (ps == null) {
-								if (!propertyset_name.isEmpty())
-									ps = new PropertySet_SMLS(this.uriBase, lbd_general_output_model,
-											this.ontology_model, propertyset_name.get(0).toString());
-								else
-									ps = new PropertySet_SMLS(this.uriBase, lbd_general_output_model,
-											this.ontology_model, "");
-								this.propertysets.put(propertyset.getURI(), ps);
-							}
 							if (pvalue.toString().trim().length() > 0) {
 								if (pvalue.isLiteral()) {
 									String val = pvalue.asLiteral().getLexicalForm();
@@ -296,22 +329,11 @@ public class IFCtoLBDConverter_BIM4Ren {
 										pvalue = ResourceFactory.createTypedLiteral(Double.NaN);
 								}
 								ps.putPnameValue(pname.toString(), pvalue);
-								ps.putPsetPropertyRef(pname);
+								if (property_type.size() > 0)
+									ps.putPsetPropertyRef(pname);
 							}
 						}
 					} else {
-						RDFNode pname = property_name.get(0);
-						PropertySet_SMLS ps = this.propertysets.get(propertyset.getURI());
-						if (ps == null) {
-							if (!propertyset_name.isEmpty())
-								ps = new PropertySet_SMLS(this.uriBase, lbd_general_output_model, this.ontology_model,
-										propertyset_name.get(0).toString());
-							else
-								ps = new PropertySet_SMLS(this.uriBase, lbd_general_output_model, this.ontology_model,
-										"");
-
-							this.propertysets.put(propertyset.getURI(), ps);
-						}
 						ps.putPnameValue(pname.toString(), propertySingleValue);
 						ps.putPsetPropertyRef(pname);
 						RDFUtils.copyTriples(0, propertySingleValue, lbd_general_output_model);
@@ -337,7 +359,7 @@ public class IFCtoLBDConverter_BIM4Ren {
 		LBD_NS.Product.addNameSpace(lbd_general_output_model);
 		LBD_NS.PROPS_NS.addNameSpace(lbd_general_output_model);
 		LBD_NS.PROPS_NS.addNameSpace(lbd_general_output_model);
-		
+
 		OPM.addNameSpacesL3(lbd_general_output_model);
 
 		lbd_general_output_model.setNsPrefix("rdf", RDF.uri);

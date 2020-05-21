@@ -76,12 +76,10 @@ public class AttributeSet {
 	Set<String> hashes = new HashSet<>();
 
 	public void connect(Resource lbd_resource, String long_guid) {
-		if (hashes.add(long_guid)) {
-			List<PsetProperty> properties = writeOPM_Set(long_guid);
-			for (PsetProperty pp : properties) {
-				if (!this.lbd_model.listStatements(lbd_resource, pp.p, pp.r).hasNext())
-					lbd_resource.addProperty(pp.p, pp.r);
-			}
+		for (String pname : this.mapPnameValue.keySet()) {
+			Property property;
+			property = this.lbd_model.createProperty(LBD_NS.PROPS_NS.props_ns + pname + "_attribute_simple");
+			lbd_resource.addProperty(property, this.mapPnameValue.get(pname));
 		}
 	}
 
@@ -91,17 +89,8 @@ public class AttributeSet {
 			Resource property_resource;
 			property_resource = this.lbd_model.createResource(this.uriBase + k + "_" + long_guid);
 
-			Resource state_resourse;
-			state_resourse = this.lbd_model
-					.createResource(this.uriBase + "state_" + k + "_" + long_guid + "_" + System.currentTimeMillis());
-			property_resource.addProperty(OPM.hasState, state_resourse);
-
-			LocalDateTime datetime = LocalDateTime.now();
-			String time_string = datetime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-			state_resourse.addProperty(RDF.type, OPM.currentState);
-			state_resourse.addLiteral(OPM.generatedAtTime, time_string);
-			state_resourse.addProperty(OPM.value, this.mapPnameValue.get(k));
-
+			property_resource.addProperty(OPM.value, this.mapPnameValue.get(k));
+			
 			Property p;
 			p = this.lbd_model.createProperty(LBD_NS.PROPS_NS.props_ns + StringOperations.toCamelCase(k));
 			properties.add(new PsetProperty(p, property_resource));

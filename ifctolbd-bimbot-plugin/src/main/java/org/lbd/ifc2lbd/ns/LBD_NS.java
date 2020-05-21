@@ -13,7 +13,8 @@ public class LBD_NS extends abstract_NS{
 		{
 			model.setNsPrefix("smls", SMLS_ns);
 		}
-		
+		public static final Property unit =property(SMLS_ns,"unit");
+		public static final Property accuracy =property(SMLS_ns,"accuracy");
 	}
 	
 	
