@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.jena.rdf.model.Literal;
@@ -41,7 +42,8 @@ import org.lbd.ifc2lbd.utils.StringOperations;
  * 
  *
  */
-public class AttributeSet {
+public class AttributeSet_SMLS {
+	private final Map<String, String> unitmap;
 	private class PsetProperty {
 		final Property p; // Jena RDF property
 		final Resource r; // Jena RDF resource object
@@ -57,15 +59,22 @@ public class AttributeSet {
 	private final Model lbd_model;
 
 	private final Map<String, RDFNode> mapPnameValue = new HashMap<>();
+	private final Map<String, RDFNode> mapPnameType = new HashMap<>();
 
-	public AttributeSet(String uriBase, Model lbd_model) {
+	public AttributeSet_SMLS(String uriBase, Model lbd_model,Map<String, String> unitmap) {
+		this.unitmap = unitmap;
 		this.uriBase = uriBase;
 		this.lbd_model = lbd_model;
 	}
 
-	public void putAnameValue(String attribute_name, RDFNode value) {
+	public void putAnameValue(String attribute_name, RDFNode value,Optional<Resource> atype) {
 		mapPnameValue.put(StringOperations.toCamelCase(attribute_name), value);
+		if(atype.isPresent())
+		{
+			mapPnameType.put(StringOperations.toCamelCase(attribute_name), atype.get());
+		}
 	}
+
 
 	/**
 	 * Adds property value property for an resource.
@@ -76,11 +85,43 @@ public class AttributeSet {
 	Set<String> hashes = new HashSet<>();
 
 	public void connect(Resource lbd_resource, String long_guid) {
-		for (String pname : this.mapPnameValue.keySet()) {
-			Property property;
-			property = this.lbd_model.createProperty(LBD_NS.PROPS_NS.props_ns + pname + "_attribute_simple");
-			lbd_resource.addProperty(property, this.mapPnameValue.get(pname));
-		}
+		
+		if (hashes.add(lbd_resource.getURI()))
+			for (String pname : this.mapPnameValue.keySet()) {
+				Property property = lbd_resource.getModel().createProperty(LBD_NS.PROPS_NS.props_ns + pname);
+
+				RDFNode ifc_measurement_type = this.mapPnameType.get(pname);
+				if (ifc_measurement_type != null) {
+					String unit = ifc_measurement_type.asResource().getLocalName().toLowerCase();
+					if (unit.startsWith("ifc"))
+						unit = unit.substring(3);
+					if (unit.startsWith("positive"))
+						unit = unit.substring("positive".length());
+					if (unit.endsWith("measure"))
+						unit = unit.substring(0, unit.length() - "measure".length());
+					String si_unit = this.unitmap.get(unit);
+					if (si_unit != null) {
+						Resource bn = lbd_resource.getModel().createResource();
+						lbd_resource.addProperty(property, bn);
+
+						bn.addProperty(RDF.value, this.mapPnameValue.get(pname));
+						if (si_unit.equals("METRE"))
+						{
+							bn.addProperty(LBD_NS.SMLS.unit, LBD_NS.UNIT.METER);
+							Resource bn_accuracy = lbd_resource.getModel().createResource();
+							Literal  accuracy = lbd_resource.getModel().createTypedLiteral(1f);
+							bn.addProperty(LBD_NS.SMLS.accuracy, bn_accuracy);
+							bn_accuracy.addProperty(RDF.value, accuracy);
+							
+						}
+						else
+							bn.addProperty(LBD_NS.BEXT.si_unit, si_unit);
+						bn.addProperty(LBD_NS.BEXT.unitType, unit);
+					} else {
+						lbd_resource.addProperty(property, this.mapPnameValue.get(pname));
+					}
+				}
+			}	
 	}
 
 	private List<PsetProperty> writeOPM_Set(String long_guid) {

@@ -354,8 +354,13 @@ public class IFCtoLBDConverter_BIM4Ren {
 	 * @param hasBuildingProperties
 	 */
 	private void addNamespaces(String uriBase) {
-		LBD_NS.BOT.addNameSpace(lbd_general_output_model);
 		LBD_NS.SMLS.addNameSpace(lbd_general_output_model);
+		LBD_NS.UNIT.addNameSpace(lbd_general_output_model);
+		LBD_NS.BEXT.addNameSpace(lbd_general_output_model);
+		
+		
+		LBD_NS.BOT.addNameSpace(lbd_general_output_model);
+		
 		LBD_NS.Product.addNameSpace(lbd_general_output_model);
 		LBD_NS.PROPS_NS.addNameSpace(lbd_general_output_model);
 		LBD_NS.PROPS_NS.addNameSpace(lbd_general_output_model);
@@ -481,7 +486,7 @@ public class IFCtoLBDConverter_BIM4Ren {
 			return;
 		String guid = IfcOWLUtils.getGUID(r, this.ifcOWL);
 		String uncompressed_guid = GuidCompressor.uncompressGuidString(guid);
-		final AttributeSet connected_attributes = new AttributeSet(this.uriBase, output_model);
+		final AttributeSet_SMLS connected_attributes = new AttributeSet_SMLS(this.uriBase, output_model,this.unitmap);
 		r.listProperties().forEachRemaining(s -> {
 			String ps = s.getPredicate().getLocalName();
 			Resource attr = s.getObject().asResource();
@@ -494,22 +499,22 @@ public class IFCtoLBDConverter_BIM4Ren {
 					attr.listProperties(ifcOWL.getHasString()).forEachRemaining(attr_s -> {
 						if (attr_s.getObject().isLiteral()
 								&& attr_s.getObject().asLiteral().getLexicalForm().length() > 0) {
-							connected_attributes.putAnameValue(property_string, attr_s.getObject());
+							connected_attributes.putAnameValue(property_string, attr_s.getObject(),atype);
 						}
 					});
 
 				} else if (atype.get().getLocalName().equals("IfcIdentifier")) {
 					attr.listProperties(ifcOWL.getHasString()).forEachRemaining(
-							attr_s -> connected_attributes.putAnameValue(property_string, attr_s.getObject()));
+							attr_s -> connected_attributes.putAnameValue(property_string, attr_s.getObject(),atype));
 				} else {
 					attr.listProperties(ifcOWL.getHasString()).forEachRemaining(
-							attr_s -> connected_attributes.putAnameValue(property_string, attr_s.getObject()));
+							attr_s -> connected_attributes.putAnameValue(property_string, attr_s.getObject(),atype));
 					attr.listProperties(ifcOWL.getHasInteger()).forEachRemaining(
-							attr_s -> connected_attributes.putAnameValue(property_string, attr_s.getObject()));
+							attr_s -> connected_attributes.putAnameValue(property_string, attr_s.getObject(),atype));
 					attr.listProperties(ifcOWL.getHasDouble()).forEachRemaining(
-							attr_s -> connected_attributes.putAnameValue(property_string, attr_s.getObject()));
+							attr_s -> connected_attributes.putAnameValue(property_string, attr_s.getObject(),atype));
 					attr.listProperties(ifcOWL.getHasBoolean()).forEachRemaining(
-							attr_s -> connected_attributes.putAnameValue(property_string, attr_s.getObject()));
+							attr_s -> connected_attributes.putAnameValue(property_string, attr_s.getObject(),atype));
 				}
 
 			}

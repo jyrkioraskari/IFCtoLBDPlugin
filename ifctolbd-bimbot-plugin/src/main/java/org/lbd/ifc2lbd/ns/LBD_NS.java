@@ -6,18 +6,37 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 
 public class LBD_NS extends abstract_NS{
-	
+
+	public static class BEXT {
+		public static final String BEXT_ns = "https://w3id.org/bot/extensions-owl#";
+		public static final Property si_unit =property(BEXT_ns,"si_unit");
+		public static final Property ifc_unit =property(BEXT_ns,"ifc_unit");
+		public static final Property unitType =property(BEXT_ns,"unitType");
+		public static void addNameSpace(Model model)
+		{
+			model.setNsPrefix("bext", BEXT_ns);
+		}
+	}
+
 	public static class SMLS {
-		public static final String SMLS_ns = "https://w3id.org/bot#";
+		public static final String SMLS_ns = "https://w3id.org/def/smls-owl#";
+		public static final Property unit =property(SMLS_ns,"unit");
+		public static final Property accuracy =property(SMLS_ns,"accuracy");
 		public static void addNameSpace(Model model)
 		{
 			model.setNsPrefix("smls", SMLS_ns);
 		}
-		public static final Property unit =property(SMLS_ns,"unit");
-		public static final Property accuracy =property(SMLS_ns,"accuracy");
 	}
 	
-	
+	public static class UNIT {
+		public static final String UNIT_ns = "http://qudt.org/vocab/unit/";
+		public static final Resource METER =resource(UNIT_ns,"M");
+		public static void addNameSpace(Model model)
+		{
+			model.setNsPrefix("unit", UNIT_ns);
+		}
+		
+	}
 	public static class BOT {
 		public static final String bot_ns = "https://w3id.org/bot#";
 		
