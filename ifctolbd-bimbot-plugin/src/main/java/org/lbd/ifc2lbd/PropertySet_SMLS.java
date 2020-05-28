@@ -139,18 +139,41 @@ public class PropertySet_SMLS {
 						lbd_resource.addProperty(property, bn);
 
 						bn.addProperty(RDF.value, this.mapPnameValue.get(pname));
-						if (si_unit.equals("METRE"))
-						{
+
+						if (si_unit.equals("METRE")) {
 							bn.addProperty(LBD_NS.SMLS.unit, LBD_NS.UNIT.METER);
 							Resource bn_accuracy = lbd_resource.getModel().createResource();
-							Literal  accuracy = lbd_resource.getModel().createTypedLiteral(1f);
+							Literal accuracy = lbd_resource.getModel().createTypedLiteral(1f);
 							bn.addProperty(LBD_NS.SMLS.accuracy, bn_accuracy);
 							bn_accuracy.addProperty(RDF.value, accuracy);
-							
-						}
-						else
+
+						} else if (si_unit.equals("SQUARE_METRE")) {
+							bn.addProperty(LBD_NS.SMLS.unit, LBD_NS.UNIT.SQUARE_METRE);
+							Resource bn_accuracy = lbd_resource.getModel().createResource();
+							Literal accuracy = lbd_resource.getModel().createTypedLiteral(1f);
+							bn.addProperty(LBD_NS.SMLS.accuracy, bn_accuracy);
+							bn_accuracy.addProperty(RDF.value, accuracy);
+
+						} else if (si_unit.equals("CUBIC_METRE")) {
+							bn.addProperty(LBD_NS.SMLS.unit, LBD_NS.UNIT.CUBIC_METRE);
+							Resource bn_accuracy = lbd_resource.getModel().createResource();
+							Literal accuracy = lbd_resource.getModel().createTypedLiteral(1f);
+							bn.addProperty(LBD_NS.SMLS.accuracy, bn_accuracy);
+							bn_accuracy.addProperty(RDF.value, accuracy);
+
+						} 
+						else if (si_unit.equals("RADIAN")) {
+							bn.addProperty(LBD_NS.SMLS.unit, LBD_NS.UNIT.RADIAN);
+							Resource bn_accuracy = lbd_resource.getModel().createResource();
+							Literal accuracy = lbd_resource.getModel().createTypedLiteral(1f);
+							bn.addProperty(LBD_NS.SMLS.accuracy, bn_accuracy);
+							bn_accuracy.addProperty(RDF.value, accuracy);
+
+						} 
+						else {
 							bn.addProperty(LBD_NS.BEXT.si_unit, si_unit);
-						bn.addProperty(LBD_NS.BEXT.unitType, unit);
+							bn.addProperty(LBD_NS.BEXT.unitType, unit);
+						}
 					} else {
 						lbd_resource.addProperty(property, this.mapPnameValue.get(pname));
 					}

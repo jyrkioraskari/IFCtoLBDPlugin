@@ -44,6 +44,7 @@ import org.lbd.ifc2lbd.utils.StringOperations;
  */
 public class AttributeSet_SMLS {
 	private final Map<String, String> unitmap;
+
 	private class PsetProperty {
 		final Property p; // Jena RDF property
 		final Resource r; // Jena RDF resource object
@@ -61,20 +62,18 @@ public class AttributeSet_SMLS {
 	private final Map<String, RDFNode> mapPnameValue = new HashMap<>();
 	private final Map<String, RDFNode> mapPnameType = new HashMap<>();
 
-	public AttributeSet_SMLS(String uriBase, Model lbd_model,Map<String, String> unitmap) {
+	public AttributeSet_SMLS(String uriBase, Model lbd_model, Map<String, String> unitmap) {
 		this.unitmap = unitmap;
 		this.uriBase = uriBase;
 		this.lbd_model = lbd_model;
 	}
 
-	public void putAnameValue(String attribute_name, RDFNode value,Optional<Resource> atype) {
+	public void putAnameValue(String attribute_name, RDFNode value, Optional<Resource> atype) {
 		mapPnameValue.put(StringOperations.toCamelCase(attribute_name), value);
-		if(atype.isPresent())
-		{
+		if (atype.isPresent()) {
 			mapPnameType.put(StringOperations.toCamelCase(attribute_name), atype.get());
 		}
 	}
-
 
 	/**
 	 * Adds property value property for an resource.
@@ -85,7 +84,7 @@ public class AttributeSet_SMLS {
 	Set<String> hashes = new HashSet<>();
 
 	public void connect(Resource lbd_resource, String long_guid) {
-		
+
 		if (hashes.add(lbd_resource.getURI()))
 			for (String pname : this.mapPnameValue.keySet()) {
 				Property property = lbd_resource.getModel().createProperty(LBD_NS.PROPS_NS.props_ns + pname);
@@ -105,23 +104,46 @@ public class AttributeSet_SMLS {
 						lbd_resource.addProperty(property, bn);
 
 						bn.addProperty(RDF.value, this.mapPnameValue.get(pname));
-						if (si_unit.equals("METRE"))
-						{
+						if (si_unit.equals("METRE")) {
 							bn.addProperty(LBD_NS.SMLS.unit, LBD_NS.UNIT.METER);
 							Resource bn_accuracy = lbd_resource.getModel().createResource();
-							Literal  accuracy = lbd_resource.getModel().createTypedLiteral(1f);
+							Literal accuracy = lbd_resource.getModel().createTypedLiteral(1f);
 							bn.addProperty(LBD_NS.SMLS.accuracy, bn_accuracy);
 							bn_accuracy.addProperty(RDF.value, accuracy);
-							
-						}
-						else
+
+						} else if (si_unit.equals("SQUARE_METRE")) {
+							bn.addProperty(LBD_NS.SMLS.unit, LBD_NS.UNIT.SQUARE_METRE);
+							Resource bn_accuracy = lbd_resource.getModel().createResource();
+							Literal accuracy = lbd_resource.getModel().createTypedLiteral(1f);
+							bn.addProperty(LBD_NS.SMLS.accuracy, bn_accuracy);
+							bn_accuracy.addProperty(RDF.value, accuracy);
+
+						} 
+						else if (si_unit.equals("CUBIC_METRE")) {
+							bn.addProperty(LBD_NS.SMLS.unit, LBD_NS.UNIT.CUBIC_METRE);
+							Resource bn_accuracy = lbd_resource.getModel().createResource();
+							Literal accuracy = lbd_resource.getModel().createTypedLiteral(1f);
+							bn.addProperty(LBD_NS.SMLS.accuracy, bn_accuracy);
+							bn_accuracy.addProperty(RDF.value, accuracy);
+
+						} 
+						else if (si_unit.equals("RADIAN")) {
+							bn.addProperty(LBD_NS.SMLS.unit, LBD_NS.UNIT.RADIAN);
+							Resource bn_accuracy = lbd_resource.getModel().createResource();
+							Literal accuracy = lbd_resource.getModel().createTypedLiteral(1f);
+							bn.addProperty(LBD_NS.SMLS.accuracy, bn_accuracy);
+							bn_accuracy.addProperty(RDF.value, accuracy);
+
+						} 
+						else {
 							bn.addProperty(LBD_NS.BEXT.si_unit, si_unit);
-						bn.addProperty(LBD_NS.BEXT.unitType, unit);
+							bn.addProperty(LBD_NS.BEXT.unitType, unit);
+						}
 					} else {
 						lbd_resource.addProperty(property, this.mapPnameValue.get(pname));
 					}
 				}
-			}	
+			}
 	}
 
 	private List<PsetProperty> writeOPM_Set(String long_guid) {
@@ -131,7 +153,7 @@ public class AttributeSet_SMLS {
 			property_resource = this.lbd_model.createResource(this.uriBase + k + "_" + long_guid);
 
 			property_resource.addProperty(OPM.value, this.mapPnameValue.get(k));
-			
+
 			Property p;
 			p = this.lbd_model.createProperty(LBD_NS.PROPS_NS.props_ns + StringOperations.toCamelCase(k));
 			properties.add(new PsetProperty(p, property_resource));
