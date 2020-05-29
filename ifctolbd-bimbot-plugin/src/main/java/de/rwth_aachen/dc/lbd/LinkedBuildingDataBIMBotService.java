@@ -82,8 +82,8 @@ public class LinkedBuildingDataBIMBotService extends RWTH_BimBotAbstractService 
 			}
 		};
 		//m.write(System.out, "TTL");
-		m.write(ttl_output, "TTL");
-		//RDFDataMgr.write(ttl_output, m, RDFFormat.JSONLD_COMPACT_PRETTY);
+		//m.write(ttl_output, "TTL");
+		RDFDataMgr.write(ttl_output, m, RDFFormat.JSONLD_COMPACT_PRETTY);
 		result_string.append(ttl_output.toString());
 	}
 
@@ -99,7 +99,7 @@ public class LinkedBuildingDataBIMBotService extends RWTH_BimBotAbstractService 
 		Writer out = null;
 		try {
 			out = new BufferedWriter(
-					new OutputStreamWriter(new FileOutputStream("c:\\test\\bim4ren\\BIM4Ren_DUNANT_AR2Build-RawFile_IFC4.ttl"), "UTF-8"));
+					new OutputStreamWriter(new FileOutputStream("c:\\test\\bim4ren\\BIM4Ren_DUNANT_AR2Build-RawFile_IFC4.jsonld"), "UTF-8"));
 		} catch (UnsupportedEncodingException | FileNotFoundException e) {
 			e.printStackTrace();
 		}
