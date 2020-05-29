@@ -9,7 +9,16 @@
 
 ## Cite this
 ```
-
+@software{jyrki_oraskari_2020_3865091,
+  author       = {Jyrki Oraskari},
+  title        = {jyrkioraskari/IFCtoLBD\_BIMBot-Plugin 1.0},
+  month        = may,
+  year         = 2020,
+  publisher    = {Zenodo},
+  version      = {1.0},
+  doi          = {10.5281/zenodo.3865091},
+  url          = {https://doi.org/10.5281/zenodo.3865091}
+}
 ```
 
 ## Acknowledgements
