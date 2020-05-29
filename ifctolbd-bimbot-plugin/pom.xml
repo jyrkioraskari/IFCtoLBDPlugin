@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.rwth-aachen.dc.lbd</groupId>
 	<artifactId>IFCtoLBD_BIMBot-Plugin</artifactId>
-	<version>0.1.alpha</version>
+	<version>0.2</version>
 	<description>IFCtoLBD BimBot service for BIMserver</description>
 	<organization>
 		<name>RWTH-Aachen DC</name>
@@ -85,11 +85,6 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>23.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.pipauwel</groupId>
-			<artifactId>ifcParserLib</artifactId>
-			<version>0.777</version>
 		</dependency>
 	</dependencies>
 	<build>
