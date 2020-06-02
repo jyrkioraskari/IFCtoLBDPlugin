@@ -6,6 +6,9 @@
 
 - This work is based on the source code of https://github.com/opensourceBIM/BIMserver and thus used the same license. 
 
+## Installation
+
+https://youtu.be/jrAHxTPNmjQ
 
 ## Cite this
 ```
