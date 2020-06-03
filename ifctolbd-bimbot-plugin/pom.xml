@@ -86,7 +86,15 @@
 			<artifactId>guava</artifactId>
 			<version>23.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.pipauwel/ifcParserLib -->
+		<!-- This is needed so that the plugin converter can find the classes -->
+		<dependency>
+			<groupId>com.github.pipauwel</groupId>
+			<artifactId>ifcParserLib</artifactId>
+			<version>0.2</version>
+		</dependency>
 	</dependencies>
+
 	<build>
 		<resources>
 			<resource>
