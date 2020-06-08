@@ -7,7 +7,7 @@ import org.apache.jena.rdf.model.Resource;
 
 public class LBD_NS extends abstract_NS{
 
-	public static class BEXT {
+	/*public static class BEXT {
 		public static final String BEXT_ns = "https://w3id.org/bot/extensions-owl#";
 		public static final Property si_unit =property(BEXT_ns,"si_unit");
 		public static final Property ifc_unit =property(BEXT_ns,"ifc_unit");
@@ -16,7 +16,7 @@ public class LBD_NS extends abstract_NS{
 		{
 			model.setNsPrefix("bext", BEXT_ns);
 		}
-	}
+	}*/
 
 	public static class SMLS {
 		public static final String SMLS_ns = "https://w3id.org/def/smls-owl#";
@@ -74,8 +74,8 @@ public class LBD_NS extends abstract_NS{
 		public static void addNameSpace(Model model)
 		{
 			model.setNsPrefix("beo", beo_ns);
-			model.setNsPrefix("furn", furnishing_ns);
-			model.setNsPrefix("mep", mep_ns);
+			//model.setNsPrefix("furn", furnishing_ns);
+			//model.setNsPrefix("mep", mep_ns);
 		}
 		
 		public static Resource getProductType(Resource ifOwlClass)
@@ -99,8 +99,8 @@ public class LBD_NS extends abstract_NS{
 		public static void addNameSpace(Model model)
 		{
 			model.setNsPrefix("props", props_ns);
-			model.setNsPrefix("bsddld", bsddprops_ns);
-			model.setNsPrefix("IFC4-PSD", psd_ns);
+			//model.setNsPrefix("bsddld", bsddprops_ns);
+			//model.setNsPrefix("IFC4-PSD", psd_ns);
 		}
 		
 		//public static final Resource props=resource(props_ns,"Pset");

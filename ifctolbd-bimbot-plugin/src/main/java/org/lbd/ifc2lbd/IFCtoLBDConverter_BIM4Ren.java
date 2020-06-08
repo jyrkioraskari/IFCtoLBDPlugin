@@ -356,7 +356,7 @@ public class IFCtoLBDConverter_BIM4Ren {
 	private void addNamespaces(String uriBase) {
 		LBD_NS.SMLS.addNameSpace(lbd_general_output_model);
 		LBD_NS.UNIT.addNameSpace(lbd_general_output_model);
-		LBD_NS.BEXT.addNameSpace(lbd_general_output_model);
+		//LBD_NS.BEXT.addNameSpace(lbd_general_output_model);
 		
 		
 		LBD_NS.BOT.addNameSpace(lbd_general_output_model);
@@ -371,7 +371,7 @@ public class IFCtoLBDConverter_BIM4Ren {
 		lbd_general_output_model.setNsPrefix("rdfs", RDFS.uri);
 		lbd_general_output_model.setNsPrefix("xsd", "http://www.w3.org/2001/XMLSchema#");
 		lbd_general_output_model.setNsPrefix("inst", uriBase);
-		lbd_general_output_model.setNsPrefix("geo", "http://www.opengis.net/ont/geosparql#");
+		//lbd_general_output_model.setNsPrefix("geo", "http://www.opengis.net/ont/geosparql#");
 
 	}
 

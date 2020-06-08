@@ -11,12 +11,12 @@ public class OPM extends abstract_NS{
 	
 	
 	public static final String schema_ns = "http://schema.org/";
-	public static final String seas_ns = "https://w3id.org/seas/";
+	//public static final String seas_ns = "https://w3id.org/seas/";
 	
 	
 	
 	public static final Property value =property(schema_ns,"value");
-	public static final Property hasState =property(seas_ns,"evaluation");
+	//public static final Property hasState =property(seas_ns,"evaluation");
 	public static final Resource currentState=resource(opm_ns,"CurrentState");
 
 
@@ -30,9 +30,9 @@ public class OPM extends abstract_NS{
 	
 	public static void addNameSpacesL3(Model model)
 	{
-		model.setNsPrefix("opm", opm_ns);
-		model.setNsPrefix("schema", schema_ns);
-		model.setNsPrefix("seas", seas_ns);
+		//model.setNsPrefix("opm", opm_ns);
+		//model.setNsPrefix("schema", schema_ns);
+		//model.setNsPrefix("seas", seas_ns);
 	}
 
 
