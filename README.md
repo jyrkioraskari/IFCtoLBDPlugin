@@ -10,6 +10,10 @@
 
 https://youtu.be/jrAHxTPNmjQ
 
+## OpenAPI implementation
+
+https://github.com/jyrkioraskari/IFCtoLBD_OpenAPI
+
 ## Cite this
 ```
 @software{jyrki_oraskari_2020_3865091,
