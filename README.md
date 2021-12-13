@@ -15,7 +15,7 @@ https://youtu.be/jrAHxTPNmjQ
 
 https://github.com/jyrkioraskari/IFCtoLBD_OpenAPI
 
-## Cite this
+## How to cite
 ```
 @software{jyrki_oraskari_2020_3865091,
   author       = {Jyrki Oraskari},
